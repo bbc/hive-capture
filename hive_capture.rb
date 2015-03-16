@@ -10,8 +10,14 @@ require 'rubygems'
 require 'bundler/setup'
 require 'sinatra'
 require 'sinatra/antie_config'
+require 'chamber'
 
 APPLICATION_ID = 'hive_capture'
+
+Chamber.load(
+  basepath: File.expand_path('..', Pathname.new(__FILE__).realpath),
+  namespaces: { environment: ENV['HIVE_ENVIRONMENT'] || 'development' }
+)
 
 enable :sessions
 set :bind, '0.0.0.0'
