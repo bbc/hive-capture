@@ -1,6 +1,7 @@
-#source 'https://rubygems.org'
+source 'https://rubygems.org'
 
 gem 'sinatra'
+gem 'chamber'
 
 group :test do
   gem 'rspec'
