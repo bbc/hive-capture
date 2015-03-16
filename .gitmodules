@@ -1,0 +1,3 @@
+[submodule "public/antie"]
+	path = public/antie
+	url = https://github.com/fmtvp/tal

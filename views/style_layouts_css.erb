@@ -1,0 +1,12 @@
+html, body {
+  font-size: <%= font_size(params[:size]) %>px;
+}
+
+#app {
+  position: relative;
+  overflow: hidden;
+  width: <%= width(params[:size]) %>px;
+  height: <%= height(params[:size]) %>px;
+  top: 50%;
+  margin: <%= left_margin(params[:size]) %>px auto 0 auto;
+}

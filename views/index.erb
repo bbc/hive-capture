@@ -1,0 +1,69 @@
+<%= doc_type %>
+<%= root_element %>
+<head>
+  <%= device_header %>
+
+  <!-- Set up required aliases -->
+  <script type='text/javascript'>
+    var require = {
+      baseUrl: '',
+      paths: {
+        <%= APPLICATION_ID %>: 'script',
+        antie: 'antie/static/script'
+      },
+      priority: [],
+      callback: function() {}
+    };
+  </script>
+
+  <!-- Load require.js -->
+  <script type='text/javascript' src='antie/static/script/lib/require.js'></script>
+
+  <!-- Load application base style sheet -->
+  <link rel='stylesheet' href='style/base.css'/>
+
+  <!-- Expose device config to framework -->
+  <script>
+    var antie = {
+      framework: {
+        deviceConfiguration: <%= configuration_string(APPLICATION_ID) %>
+      }
+    }
+  </script>
+</head>
+
+<body style='background: #000;'>
+  <!-- Add in the device specific body (Plugins, etc) -->
+  <%= device_body %>
+
+  <!-- Create a loading message -->
+  <div id='static-loading-screen' style='position: absolute; width: 100%; height: 100%; background: #000;'>
+    Application is loading ...
+  </div>
+
+  <!-- Create a div to house the app -->
+  <div id='app' class='display-none'></div>
+
+  <!-- Load the application and launch -->
+  <script type='text/javascript'>
+    require(
+      [ '<%= APPLICATION_ID %>/appui/capture' ],
+      function(Capture) {
+        require.ready(function() {
+          function onReady() {
+            var staticLoadingScreen = document.getElementById('static-loading-screen');
+            staticLoadingScreen.parentNode.removeChild(staticLoadingScreen);
+          };
+
+          new Capture(
+            document.getElementById('app'),
+            'style/',
+            'img/',
+            onReady
+          );
+        });
+      }
+    );
+  </script>
+</body>
+</html>

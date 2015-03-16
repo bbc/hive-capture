@@ -1,0 +1,14 @@
+require.def('<%= APPLICATION_ID %>/appui/layouts/<%= params[:size] %>',
+    {
+        classes: [
+            "layout<%= params[:size] %>"
+        ],
+        css: [
+            "layouts/<%= params[:size] %>.css"
+        ],
+        requiredScreenSize: {
+            width: <%= width(params[:size]) %>,
+            height: <%= height(params[:size]) %>
+        }
+    }
+);

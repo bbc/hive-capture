@@ -1,0 +1,37 @@
+require.def("<%= APPLICATION_ID %>/appui/capture",
+  [
+    "antie/application",
+    "antie/widgets/container",
+    "antie/widgets/label"
+  ],
+  function(Application, Container, Label) {
+    return Application.extend( {
+      init: function(appDiv, styleDir, imgDir, callback) {
+        var self;
+        self = this;
+
+        self._super(appDiv, styleDir, imgDir, callback);
+
+        self._setRootContainer = function() {
+          var container = new Container();
+          container.outputElement = appDiv;
+          self.setRootWidget(container);
+        };
+      },
+
+      run: function() {
+        this._setRootContainer();
+
+        this.addComponentContainer("titleComponentContainer", "<%= APPLICATION_ID %>/appui/components/titleContainer");
+        this.addComponentContainer("deviceInformationContainer", "<%= APPLICATION_ID %>/appui/components/deviceInformation");
+        //this.addComponentContainer("hiveStatsContainer", "<%= APPLICATION_ID %>/appui/components/hiveStats");
+
+        // Call Application.ready() once (and only once)
+        this.addEventListener("aftershow", function appReady(evt) {
+                    self.getCurrentApplication().ready();
+                    self.removeEventListener('aftershow', appReady);
+                });
+      }
+    } );
+  }
+);

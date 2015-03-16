@@ -1,0 +1,92 @@
+require.def("<%= APPLICATION_ID %>/appui/components/deviceInformation",
+  [
+    "antie/application",
+    "antie/widgets/component",
+    "antie/widgets/label",
+    "antie/widgets/container",
+    "antie/widgets/list"
+  ],
+  function (Application, Component, Label, Container, List) {
+    return Component.extend({
+      init: function() {
+        var self = this;
+        this._super("deviceInformation");
+
+        var ddbid = new Container("ddbid_container");
+        device_id=5;
+        device_status = 'Fine';
+        device_brand = '<%= brand %>';
+        device_model = '<%= model %>';
+        device_config = '<%= configuration %>';
+        device_ipaddr = '<%= request.ip %>';
+        whoami = 'Who Am I';
+        device_mac = '<%= mac(request.ip) %>';
+        titantv_url = 'tturl';
+        ddbid.appendChildWidget(new Label("ddbid", device_id));
+        this.appendChildWidget(ddbid);
+
+        var table = new List('device_table');
+
+        var table_rows = {
+          status: { name: "Status", value: device_status },
+          device_brand: { name: "Brand", value: device_brand },
+          device_model: { name: "Model", value: device_model },
+          device_config: { name: "Configuration", value: device_config },
+          device_ipaddr: { name: "IP Address", value: device_ipaddr },
+          whoami: { name: "WHOAMI", value: whoami },
+          device_mac: { name: "MAC Address", value: device_mac },
+          titantv_url: { name: "TitanTV url", value: titantv_url },
+          polling_count: { name: "Polling", value: 0 }
+        };
+
+        var widgets = {};
+
+        for (var key in table_rows) {
+          var row = new Container();
+          row.addClass('row');
+          label = new Label(key + "_label", table_rows[key]["name"]);
+          label.addClass('label');
+          value = new Label(key, table_rows[key]["value"]);
+          value.addClass('value')
+          row.appendChildWidget(label);
+          row.appendChildWidget(value);
+          table.appendChildWidget(row);
+          widgets[key] = value;
+        }
+
+        this.appendChildWidget(table);
+
+        application = Application.getCurrentApplication();
+        device = application.getDevice();
+        polling_count = 0;
+
+//        // Start polling
+//        var poll = function(){
+//          var callbacks = {
+//            onSuccess : function( json ) {
+//              taskInfo = json;
+//              setTimeout(poll, 5000);
+//              if ( taskInfo.action ) {
+//                if ( taskInfo.action.action_type == 'redirect' ) {
+//                  application.launchAppFromURL(taskInfo.action.body, {}, [], true);
+//                }
+//              } else {
+//                // Something
+//              }
+//              widgets['status'].setText(taskInfo.status);
+//            },
+//            onError : function( response ) {
+//              setTimeout(poll, 5000);
+//            }
+//          };
+//
+//          polling_count = polling_count + 1;
+//          widgets['polling_count'].setText(polling_count);
+//          device.loadScript( poll_url, /%callback%/, callbacks, 5000 );
+//        };
+//
+//        setTimeout(poll, 5000);
+      },
+    });
+  }
+);
