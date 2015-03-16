@@ -82,8 +82,12 @@ end
 
 def mac(ip)
   `ping -c 1 #{ip}`
-  # Linux
-  #`arp -an #{request.ip} | awk '{ print \$4 }'`
-  # Mac
-  mac = `arp -n #{ip} | awk '{ print \$4 }'`.chomp
+  mac = '00:00:00:00:00:00'
+  if RUBY_PLATFORM =~ /darwin/
+    mac = `arp -n #{ip} | awk '{ print \$4 }'`.chomp
+  elsif RUBY_PLATFORM =~ /linux/
+    mac = `arp -an #{ip} | awk '{ print \$4 }'`.chomp
+  end
+
+  mac.split(/:/).map { |n| n.rjust(2, '0') }.join(':')
 end
