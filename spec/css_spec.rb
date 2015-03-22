@@ -1,6 +1,6 @@
 require 'spec_helper.rb'
 
-describe 'CSS endpoints' do
+RSpec.describe 'CSS endpoints' do
   it 'should allow access to the base CSS file' do
     get '/style/base.css'
     expect(last_response).to be_ok

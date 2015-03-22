@@ -11,6 +11,11 @@ module Sinatra
       session[:model] = params['model'] || session[:model] || 'webkit'
     end
 
+    def device_type
+      # For the moment only TVs are supported
+      'tv'
+    end
+
     def doc_type
       '<!DOCTYPE html>'
     end

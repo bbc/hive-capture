@@ -9,6 +9,10 @@ get '/spec/model' do
   model
 end
 
+get '/spec/device_type' do
+  device_type
+end
+
 get '/spec/doc_type' do
   doc_type
 end
@@ -33,7 +37,7 @@ get '/spec/configuration_string' do
   configuration_string(params['app_id'])
 end
 
-describe Sinatra::AntieConfig do
+RSpec.describe Sinatra::AntieConfig do
   describe '#brand' do
     it 'returns default brand with no session or parameter' do
       get '/spec/brand'
@@ -79,6 +83,13 @@ describe Sinatra::AntieConfig do
       get '/spec/model', { model: 'model_in_params' }
       get '/spec/model', { model: 'model_in_params_2' }
       expect(last_response.body).to eq 'model_in_params_2'
+    end
+  end
+
+  describe '#device_type' do
+    it 'returns tv with no session or parameter' do
+      get '/spec/device_type'
+      expect(last_response.body).to eq 'tv'
     end
   end
 

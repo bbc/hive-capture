@@ -12,18 +12,22 @@ require.def("<%= APPLICATION_ID %>/appui/components/deviceInformation",
         var self = this;
         this._super("deviceInformation");
 
+        var widgets = {};
+
         var ddbid = new Container("ddbid_container");
-        device_id=5;
-        device_status = 'Fine';
+        device_id='-';
+        device_status = '---';
         device_brand = '<%= brand %>';
         device_model = '<%= model %>';
         device_config = '<%= configuration %>';
         device_ipaddr = '<%= request.ip %>';
-        whoami = 'Who Am I';
+        whoami = '<%= whoami %>';
         device_mac = '<%= mac(request.ip) %>';
-        titantv_url = 'tturl';
-        ddbid.appendChildWidget(new Label("ddbid", device_id));
+        titantv_url = '<%= url %>';
+        ddbid_label = new Label("ddbid", device_id);
+        ddbid.appendChildWidget(ddbid_label);
         this.appendChildWidget(ddbid);
+        widgets['ddbid'] = ddbid_label;
 
         var table = new List('device_table');
 
@@ -38,8 +42,6 @@ require.def("<%= APPLICATION_ID %>/appui/components/deviceInformation",
           titantv_url: { name: "TitanTV url", value: titantv_url },
           polling_count: { name: "Polling", value: 0 }
         };
-
-        var widgets = {};
 
         for (var key in table_rows) {
           var row = new Container();
@@ -56,36 +58,56 @@ require.def("<%= APPLICATION_ID %>/appui/components/deviceInformation",
 
         this.appendChildWidget(table);
 
+        message_box = new Container('message_box');
+        widgets['message'] = new Label('message', '[No message]');
+        message_box.appendChildWidget(widgets['message']);
+        this.appendChildWidget(message_box);
+
         application = Application.getCurrentApplication();
         device = application.getDevice();
         polling_count = 0;
 
-//        // Start polling
-//        var poll = function(){
-//          var callbacks = {
-//            onSuccess : function( json ) {
-//              taskInfo = json;
-//              setTimeout(poll, 5000);
-//              if ( taskInfo.action ) {
-//                if ( taskInfo.action.action_type == 'redirect' ) {
-//                  application.launchAppFromURL(taskInfo.action.body, {}, [], true);
-//                }
-//              } else {
-//                // Something
-//              }
-//              widgets['status'].setText(taskInfo.status);
-//            },
-//            onError : function( response ) {
-//              setTimeout(poll, 5000);
-//            }
-//          };
-//
-//          polling_count = polling_count + 1;
-//          widgets['polling_count'].setText(polling_count);
-//          device.loadScript( poll_url, /%callback%/, callbacks, 5000 );
-//        };
-//
-//        setTimeout(poll, 5000);
+        // Start polling
+        var poll = function(){
+          var callbacks = {
+            onSuccess : function( json ) {
+              taskInfo = json;
+              setTimeout(poll, 5000);
+              if (device_id == parseInt(device_id, 10)) {
+                if ( taskInfo.action ) {
+                  if ( taskInfo.action.action_type == 'redirect' ) {
+                    application.launchAppFromURL(taskInfo.action.body, {}, [], true);
+                  } else if ( taskInfo.action.action_type == 'message' ) {
+                    widgets['message'].setText(taskInfo.action.body);
+                  }
+                } else {
+                  // Something
+                }
+              } else {
+                //document.getElementById('deviceName').textContent = taskInfo.name;
+                deviceName.setText(taskInfo.name);
+                device_id=parseInt(taskInfo.id);
+                widgets['ddbid'].setText(device_id);
+              }
+              widgets['status'].setText(taskInfo.status);
+            },
+            onError : function( response ) {
+              setTimeout(poll, 5000);
+            }
+          };
+
+          polling_count = polling_count + 1;
+          widgets['polling_count'].setText(polling_count);
+          if (device_id == parseInt(device_id, 10)) {
+            url = 'poll/' + device_id + '?callback=%callback%';
+          } else {
+            url = 'poll?callback=%callback%';
+          }
+          device.loadScript( url, /%callback%/, callbacks, 5000 );
+        };
+
+        poll();
+        //setTimeout(poll, 5000);
       },
     });
   }

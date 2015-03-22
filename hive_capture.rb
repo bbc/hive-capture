@@ -11,6 +11,7 @@ require 'bundler/setup'
 require 'sinatra'
 require 'sinatra/antie_config'
 require 'chamber'
+require 'devicedb_comms'
 
 APPLICATION_ID = 'hive_capture'
 
@@ -36,11 +37,39 @@ before '/style/*' do
 end
 
 get '/' do
+  session['whoami'] = params['whoami'] || session['whoami']
+  session['url'] = request.url.split(/\?/)[0]
   erb :index
 end
 
 get '/poll' do
-  erb :poll_json
+  content_type :js
+  db = DeviceDBComms::Device.new(
+    Chamber.env.devicedb_url,
+    Chamber.env.cert? && Chamber.env.cert,
+  )
+
+  response = db.register(mac: mac(request.ip), device_model: model, device_brand: brand, device_type: device_type).to_json
+  if params.has_key?('callback')
+    "#{params['callback']}(#{response});"
+  else
+    response
+  end
+end
+
+get '/poll/:id' do
+  content_type :js
+  db = DeviceDBComms::Device.new(
+    Chamber.env.devicedb_url,
+    Chamber.env.cert? && Chamber.env.cert,
+  )
+
+  response = db.poll(params[:id]).to_json
+  if params.has_key?('callback')
+    "#{params['callback']}(#{response});"
+  else
+    response
+  end
 end
 
 # Main page
@@ -54,7 +83,11 @@ get '/script/appui/components/titleContainer.js' do
 end
 
 get '/script/appui/components/deviceInformation.js' do
-  erb :script_appui_components_deviceInformation_js
+  erb :script_appui_components_deviceInformation_js,
+      locals: {
+        whoami: session['whoami'],
+        url: session['url']
+      }
 end
 
 get '/script/appui/components/hiveStats.js' do
