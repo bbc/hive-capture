@@ -1,11 +1,13 @@
+ENV['HIVE_ENVIRONMENT'] = 'rspec'
+ENV['RACK_ENV'] = 'test'
+
 require 'rack/test'
 require 'rspec'
 require 'simplecov'
+require 'webmock/rspec'
 SimpleCov.start
 
 require File.expand_path '../../hive_capture.rb', __FILE__
-
-ENV['RACK_ENV'] = 'test'
 
 module RSpecMixin
   include Rack::Test::Methods

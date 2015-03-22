@@ -1,5 +1,17 @@
 html, body {
   font-size: <%= font_size(params[:size]) %>px;
+  height: 100%;
+  padding: 3%;
+}
+
+body {
+  overflow: hidden;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Helvetica", sans-serif;
+  font-weight: lighter;
+  color: #d4d4d4;
 }
 
 #app {
@@ -9,4 +21,71 @@ html, body {
   height: <%= height(params[:size]) %>px;
   top: 50%;
   margin: <%= left_margin(params[:size]) %>px auto 0 auto;
+}
+
+#titleContainer {
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 10%;
+  top: 0%;
+  font-size: 100%;
+  line-height: 120%;
+  display: block;
+  text-align: center;
+}
+
+#deviceInformation {
+  position: absolute;
+  display: block;
+  top: 10%;
+  left: 0%;
+  width: 50%;
+  height: 90%;
+}
+
+#device_table {
+  display: table;
+}
+
+#device_table .row {
+  display: table-row;
+}
+
+#device_table .row .label {
+  font-size: 70%;
+  display: table-cell;
+}
+
+#device_table .row .value {
+  font-size: 70%;
+  vertical-align: top;
+  color: red;
+  display: table-cell;
+}
+
+#ddbid {
+  font-size: 150%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#ddbid_container {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  color: #339900;
+  background-color: #cccccc;
+  width: 60%;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+}
+
+#message_box {
+  border: 5px ridge;
+  padding: 10px;
+  background-color: #ccc;
+  color: #a43;
+  opacity: 0.7;
 }

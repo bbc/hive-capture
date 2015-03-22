@@ -1,8 +1,18 @@
 development:
   app_name: 'Titan TV (Dev)'
+  devicedb_url: 'https://test-devicedb'
+  cert: '/path/to/test-cert.pem'
 
 test:
   app_name: 'Titan TV (Test)'
+  devicedb_url: 'https://test-devicedb'
+  cert: '/path/to/test-cert.pem'
 
 production:
   app_name: 'Titan TV'
+  devicedb_url: 'https://live-devicedb'
+  cert: '/path/to/live-cert.pem'
+
+rspec:
+  app_name: 'Titan TV (RSpec)'
+  devicedb_url: 'http://test-devicedb'

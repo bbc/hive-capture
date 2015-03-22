@@ -1,6 +1,6 @@
 require 'spec_helper.rb'
 
-describe 'Javascript endpoints' do
+RSpec.describe 'Javascript endpoints' do
   it 'should allow access to the main javascript page' do
     get '/script/appui/capture.js'
     expect(last_response).to be_ok

@@ -14,7 +14,8 @@ require.def("<%= APPLICATION_ID %>/appui/components/titleContainer",
         main_title = new Container();
         main_title.appendChildWidget(new Label("deviceTitle", "<%= Chamber.env.app_name %>"));
         title_name = new Container();
-        title_name.appendChildWidget(new Label("deviceName", "The Device Name"));
+        deviceName = new Label("deviceName", "---");
+        title_name.appendChildWidget(deviceName);
         this.appendChildWidget(main_title);
         this.appendChildWidget(title_name);
       }
