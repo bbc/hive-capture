@@ -93,15 +93,16 @@ require.def("<%= APPLICATION_ID %>/appui/components/deviceInformation",
             },
             onError : function( response ) {
               setTimeout(poll, 5000);
+              widgets['message'].setText("Polling failed: " + response);
             }
           };
 
           polling_count = polling_count + 1;
           widgets['polling_count'].setText(polling_count);
           if (device_id == parseInt(device_id, 10)) {
-            url = 'poll/' + device_id + '?callback=%callback%';
+            url = '<%= url('poll/') %>' + device_id + '?callback=%callback%';
           } else {
-            url = 'poll?callback=%callback%';
+            url = '<%= url('poll?callback=%callback%') %>';
           }
           device.loadScript( url, /%callback%/, callbacks, 5000 );
         };

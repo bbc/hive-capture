@@ -1,7 +1,7 @@
 require 'sinatra'
 require 'sinatra/base'
 
-module Sinatra
+class HiveCapture
   module AntieConfig
     def brand
       session[:brand] = params['brand'] || session[:brand] || 'default'
@@ -47,6 +47,4 @@ module Sinatra
       configuration
     end
   end
-
-  helpers AntieConfig
 end

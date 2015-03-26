@@ -8,8 +8,8 @@
     var require = {
       baseUrl: '',
       paths: {
-        <%= APPLICATION_ID %>: 'script',
-        antie: 'antie/static/script'
+        <%= APPLICATION_ID %>: '<%= url('script') %>',
+        antie: '<%= url('antie/static/script') %>'
       },
       priority: [],
       callback: function() {}
@@ -17,10 +17,10 @@
   </script>
 
   <!-- Load require.js -->
-  <script type='text/javascript' src='antie/static/script/lib/require.js'></script>
+  <script type='text/javascript' src=<%= url('antie/static/script/lib/require.js') %>></script>
 
   <!-- Load application base style sheet -->
-  <link rel='stylesheet' href='style/base.css'/>
+  <link rel='stylesheet' href=<%= url('style/base.css') %>/>
 
   <!-- Expose device config to framework -->
   <script>
@@ -57,8 +57,8 @@
 
           new Capture(
             document.getElementById('app'),
-            'style/',
-            'img/',
+            '<%= url('style/') %>',
+            '<%= url('img/') %>',
             onReady
           );
         });
