@@ -20,19 +20,25 @@ class HiveCapture
       ''
     end
 
-    def configuration
-      "#{brand}-#{model}-default"
+    def config_path
+      Chamber.env.device_config || 'public/antie/config/devices'
+    end
+
+    def configuration(file = false)
+      config = "#{brand}-#{model}-default"
+puts ">>>> #{config} <<<<"
+      config = 'default-webkit-default' if ! File.file?("#{config_path}/#{config}.json")
+      file ? "#{config_path}/#{config}.json" : config
     end
 
     def configuration_string(app_id)
-      configuration_file = "public/antie/config/devices/#{configuration}.json"
-      configuration = ''
-      File.open(configuration_file, 'r') do |f|
+      config = ''
+      File.open(configuration(true), 'r') do |f|
         f.each_line do |line|
-          configuration += line.sub('%application%', app_id)
+          config += line.sub('%application%', app_id)
         end
       end
-      configuration
+      config
     end
   end
 end
