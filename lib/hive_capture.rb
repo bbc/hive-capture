@@ -11,16 +11,16 @@ require 'sinatra'
 require 'chamber'
 require 'devicedb_comms'
 
+Chamber.load(
+  basepath: File.expand_path('../..', Pathname.new(__FILE__).realpath),
+  namespaces: { environment: ENV['HIVE_ENVIRONMENT'] || 'development' }
+)
+
 class HiveCapture < Sinatra::Base
   require 'hive_capture/antie_config'
   helpers AntieConfig
 
   APPLICATION_ID = 'hive_capture'
-
-  Chamber.load(
-    basepath: File.expand_path('../..', Pathname.new(__FILE__).realpath),
-    namespaces: { environment: ENV['HIVE_ENVIRONMENT'] || 'development' }
-  )
   @base_url = Chamber.env.base? ? Chamber.env.base : '/'
 
   set :root, File.expand_path('../../', Pathname.new(__FILE__).realpath)
