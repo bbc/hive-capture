@@ -21,7 +21,7 @@ class HiveCapture
     end
 
     def config_path
-      Chamber.env.device_config || 'public/antie/config/devices'
+      Chamber.env[:device_config] || 'public/antie/config/devices'
     end
 
     def configuration(file = false)
