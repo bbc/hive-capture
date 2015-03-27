@@ -3,7 +3,7 @@ require 'sinatra/base'
 
 class HiveCapture
   module AntieConfig
-    require "hive_capture/#{Chamber.env[:brand_detect] || 'default_brand_detect'}"
+    require "hive_capture/#{Chamber.env[:device_detect] || 'default_device_detect'}"
     def doc_type
       '<!DOCTYPE html>'
     end
