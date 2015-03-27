@@ -121,7 +121,7 @@ class HiveCapture < Sinatra::Base
         }
   end
 
-  get '/ait' do
+  get '/ait/' do
     content_type :ait
     headers['Last-Modified'] = Time.now.strftime("%a, %d %b %Y %H:%M:%S GMT")
     headers['Accept-Ranges'] = 'bytes'
