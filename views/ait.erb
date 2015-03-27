@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mhp:ServiceDiscovery
+    xsi:schemaLocation="urn:dvb:mhp:2009 mis_xmlait.xsd"
+    xmlns:mhp="urn:dvb:mhp:2009"
+    xmlns:ipi="urn:dvb:metadata:iptv:sdns:2008-1"
+    xmlns:tva="urn:tva:metadata:2005"
+    xmlns:mpeg7="urn:tva:mpeg7:2005"
+    xmlns:dtg="urn:dtg:si.xmlait:2012"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<mhp:ApplicationDiscovery DomainName="bbc.co.uk">
+    <mhp:ApplicationList>
+        <mhp:Application>
+            <mhp:appName Language="eng"><%= app_widget_name %></mhp:appName>
+            <mhp:applicationIdentifier>
+                <mhp:orgId><%= org_id %></mhp:orgId>
+                <mhp:appId><%= app_id %></mhp:appId>
+            </mhp:applicationIdentifier>
+            <mhp:applicationDescriptor>
+                <mhp:type>
+                    <mhp:OtherApp>application/vnd.dtg.local</mhp:OtherApp>
+                </mhp:type>
+                <mhp:controlCode>AUTOSTART</mhp:controlCode>
+                <mhp:visibility>VISIBLE_ALL</mhp:visibility>
+                <mhp:serviceBound>false</mhp:serviceBound>
+                <mhp:priority>6</mhp:priority>
+                <mhp:version>00</mhp:version>
+                <mhp:mhpVersion>
+                    <mhp:profile>0</mhp:profile>
+                    <mhp:versionMajor>1</mhp:versionMajor>
+                    <mhp:versionMinor>2</mhp:versionMinor>
+                    <mhp:versionMicro>3</mhp:versionMicro>
+                </mhp:mhpVersion>
+            </mhp:applicationDescriptor>
+            <mhp:applicationTransport xsi:type="dtg:LocalTransportType"/>
+            <mhp:applicationLocation><%= app_params %></mhp:applicationLocation>
+        </mhp:Application>
+        <mhp:Application>
+            <mhp:appName Language="eng"><%= app_name %></mhp:appName>
+            <mhp:applicationIdentifier>
+                <mhp:orgId><%= org_id %></mhp:orgId>
+                <mhp:appId><%= app_id %></mhp:appId>
+            </mhp:applicationIdentifier>
+            <mhp:applicationDescriptor>
+                <mhp:type>
+                    <mhp:OtherApp>application/vnd.ctv.xhtml+xml</mhp:OtherApp>
+                </mhp:type>
+                <mhp:controlCode>AUTOSTART</mhp:controlCode>
+                <mhp:visibility>VISIBLE_ALL</mhp:visibility>
+                <mhp:serviceBound>false</mhp:serviceBound>
+                <mhp:priority>1</mhp:priority>
+                <mhp:version>01</mhp:version>
+                <mhp:mhpVersion>
+                    <mhp:profile>0</mhp:profile>
+                    <mhp:versionMajor>1</mhp:versionMajor>
+                    <mhp:versionMinor>1</mhp:versionMinor>
+                    <mhp:versionMicro>1</mhp:versionMicro>
+                </mhp:mhpVersion>
+            </mhp:applicationDescriptor>
+            <mhp:applicationTransport xsi:type="mhp:HTTPTransportType">
+                <mhp:URLBase>http://<%= "#{request.host_with_port}/#{app_subdirectory}" %></mhp:URLBase>
+            </mhp:applicationTransport>
+            <mhp:applicationLocation>?<%= request.url.split(/\?/, 2)[1] %></mhp:applicationLocation>
+        </mhp:Application>
+    </mhp:ApplicationList>
+</mhp:ApplicationDiscovery>
+</mhp:ServiceDiscovery>

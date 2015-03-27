@@ -5,7 +5,6 @@ ENV['BUNDLE_GEMFILE'] ||= File.expand_path(
   '../Gemfile',
   Pathname.new(__FILE__).realpath
 )
-$LOAD_PATH << File.expand_path('../lib', __FILE__)
 require 'rubygems'
 require 'bundler/setup'
 require 'sinatra'
@@ -13,16 +12,18 @@ require 'chamber'
 require 'devicedb_comms'
 
 class HiveCapture < Sinatra::Base
-  require 'sinatra/antie_config'
+  require 'hive_capture/antie_config'
   helpers AntieConfig
 
   APPLICATION_ID = 'hive_capture'
 
   Chamber.load(
-    basepath: File.expand_path('..', Pathname.new(__FILE__).realpath),
+    basepath: File.expand_path('../..', Pathname.new(__FILE__).realpath),
     namespaces: { environment: ENV['HIVE_ENVIRONMENT'] || 'development' }
   )
   @base_url = Chamber.env.base? ? Chamber.env.base : '/'
+
+  set :root, File.expand_path('../../', Pathname.new(__FILE__).realpath)
 
   enable :sessions
   set :bind, '0.0.0.0'
@@ -30,6 +31,8 @@ class HiveCapture < Sinatra::Base
   configure do
     mime_type :js, 'text/javascript'
     mime_type :css, 'text/css'
+    mime_type :rc, 'text/plain'
+    mime_type :ait, 'application/vnd.dvb.ait+xml'
   end
 
   before '/script/*' do
@@ -107,6 +110,32 @@ class HiveCapture < Sinatra::Base
     erb :style_layouts_css
   end
 
+  # Broadcast autolaunch
+  get '/rc' do
+    content_type :rc
+    erb :rc,
+        locals: {
+          author: Chamber.env[:author] || 'E Noether',
+          app_name: Chamber.env[:app_name].upcase || 'NO APPLICATION NAME',
+          app_subdirectory: "#{Chamber.env[:app_subdirectory]}/" || ''
+        }
+  end
+
+  get '/ait' do
+    content_type :ait
+    headers['Last-Modified'] = Time.now.strftime("%a, %d %b %Y %H:%M:%S GMT")
+    headers['Accept-Ranges'] = 'bytes'
+    erb :ait,
+        locals: {
+          org_id: Chamber.env[:org_id] || 0,
+          app_id: Chamber.env[:app_id] || 0,
+          app_widget_name: Chamber.env[:app_widget_name] || 'No Widget Name',
+          app_params: Chamber.env[:app_params] || '?',
+          app_name: Chamber.env[:app_name] || 'No Application Name',
+          app_subdirectory: "#{Chamber.env[:app_subdirectory]}/" || ''
+        }
+  end
+
   def height(size)
     size.scan(/^(\d+)p/)[0][0].to_i
   end
@@ -132,6 +161,9 @@ class HiveCapture < Sinatra::Base
       mac = `arp -an #{ip} | awk '{ print \$4 }'`.chomp
     end
 
-    mac.split(/:/).map { |n| n.rjust(2, '0') }.join(':')
+    # Match a valid MAC address or return the default
+    /^([0-9a-fA-F]{1,2}:){5}[0-9a-fA-F]{1,2}$/ =~ mac ?
+      mac.split(/:/).map { |n| n.rjust(2, '0') }.join(':') :
+      '00:00:00:00:00:00'
   end
 end

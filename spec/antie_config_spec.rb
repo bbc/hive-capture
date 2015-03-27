@@ -1,43 +1,45 @@
 require 'spec_helper'
-require 'sinatra/antie_config'
+require 'hive_capture/antie_config'
 
-get '/spec/brand' do
-  brand
+class HiveCapture
+  get '/spec/brand' do
+    brand
+  end
+
+  get '/spec/model' do
+    model
+  end
+
+  get '/spec/device_type' do
+    device_type
+  end
+
+  get '/spec/doc_type' do
+    doc_type
+  end
+
+  get '/spec/root_element' do
+    root_element
+  end
+
+  get '/spec/device_header' do
+    device_header
+  end
+
+  get '/spec/device_body' do
+    device_body
+  end
+
+  get '/spec/configuration' do
+    configuration
+  end
+
+  get '/spec/configuration_string' do
+    configuration_string(params['app_id'])
+  end
 end
 
-get '/spec/model' do
-  model
-end
-
-get '/spec/device_type' do
-  device_type
-end
-
-get '/spec/doc_type' do
-  doc_type
-end
-
-get '/spec/root_element' do
-  root_element
-end
-
-get '/spec/device_header' do
-  device_header
-end
-
-get '/spec/device_body' do
-  device_body
-end
-
-get '/spec/configuration' do
-  configuration
-end
-
-get '/spec/configuration_string' do
-  configuration_string(params['app_id'])
-end
-
-RSpec.describe Sinatra::AntieConfig do
+RSpec.describe HiveCapture::AntieConfig do
   describe '#brand' do
     it 'returns default brand with no session or parameter' do
       get '/spec/brand'
