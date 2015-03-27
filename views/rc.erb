@@ -1,0 +1,8 @@
+@ScenePath|/scenes/startup.mhg|
+
+@Author|<%= author %>|
+@ApplicationName|<%= app_name %>|
+@AITPathVarName|Default_AIT|
+@AppendWhoami|true|
+
+@Default_AIT|http://<% "#{request.host_with_port}/#{app_subdirectory}/ait/?whoami=" %>|

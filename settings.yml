@@ -1,17 +1,21 @@
 development:
   app_name: 'Titan TV (Dev)'
-  devicedb_url: 'https://test-devicedb'
-  cert: '/path/to/test-cert.pem'
+  devicedb_url: 'http://10.10.32.29:3000'
+  app_widget_name: 'Titan TV (Dev)'
+  org_id: 384
+  app_id: 301
+  app_params: '?'
+  app_subdirectory: 'titantv'
 
 test:
   app_name: 'Titan TV (Test)'
-  devicedb_url: 'https://test-devicedb'
-  cert: '/path/to/test-cert.pem'
+  devicedb_url: 'https://devicedb.test.cloud.bbc.co.uk'
+  cert: '/opt/certs/cert.pem'
 
 production:
   app_name: 'Titan TV'
-  devicedb_url: 'https://live-devicedb'
-  cert: '/path/to/live-cert.pem'
+  devicedb_url: 'https://devicedb.cloud.bbc.co.uk'
+  cert: '/opt/certs/cert.pem'
 
 rspec:
   app_name: 'Titan TV (RSpec)'

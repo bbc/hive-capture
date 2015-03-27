@@ -1,5 +1,6 @@
 require 'sinatra'
-require File.join(File.dirname(__FILE__), 'hive_capture')
+$LOAD_PATH << File.expand_path('../lib', __FILE__)
+require 'hive_capture'
 
 disable :run
 

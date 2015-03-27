@@ -7,11 +7,11 @@ require 'simplecov'
 require 'webmock/rspec'
 SimpleCov.start
 
-require File.expand_path '../../hive_capture.rb', __FILE__
+require File.expand_path '../../lib/hive_capture.rb', __FILE__
 
 module RSpecMixin
   include Rack::Test::Methods
-  def app() Sinatra::Application end
+  def app() HiveCapture end
 end
 
 RSpec.configure { |c| c.include RSpecMixin }
