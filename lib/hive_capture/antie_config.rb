@@ -3,19 +3,7 @@ require 'sinatra/base'
 
 class HiveCapture
   module AntieConfig
-    def brand
-      session[:brand] = params['brand'] || session[:brand] || 'default'
-    end
-
-    def model
-      session[:model] = params['model'] || session[:model] || 'webkit'
-    end
-
-    def device_type
-      # For the moment only TVs are supported
-      'tv'
-    end
-
+    require "hive_capture/#{Chamber.env[:brand_detect] || 'default_brand_detect'}"
     def doc_type
       '<!DOCTYPE html>'
     end
