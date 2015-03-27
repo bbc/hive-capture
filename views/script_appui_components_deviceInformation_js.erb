@@ -17,6 +17,7 @@ require.def("<%= APPLICATION_ID %>/appui/components/deviceInformation",
         var ddbid = new Container("ddbid_container");
         device_id='-';
         device_status = '---';
+        hive_name = '---';
         device_brand = '<%= brand %>';
         device_model = '<%= model %>';
         device_config = '<%= configuration %>';
@@ -33,6 +34,7 @@ require.def("<%= APPLICATION_ID %>/appui/components/deviceInformation",
 
         var table_rows = {
           status: { name: "Status", value: device_status },
+          hive_name: { name: "Hive", value: hive_name },
           device_brand: { name: "Brand", value: device_brand },
           device_model: { name: "Model", value: device_model },
           device_config: { name: "Configuration", value: device_config },
@@ -90,6 +92,7 @@ require.def("<%= APPLICATION_ID %>/appui/components/deviceInformation",
                 widgets['ddbid'].setText(device_id);
               }
               widgets['status'].setText(taskInfo.status);
+              widgets['hive_name'].setText(taskInfo.hive ? taskInfo.hive : '<em>None</em>');
             },
             onError : function( response ) {
               setTimeout(poll, 5000);
