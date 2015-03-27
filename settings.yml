@@ -2,8 +2,8 @@ development:
   app_name: 'Titan TV (Dev)'
   devicedb_url: 'http://10.10.32.29:3000'
   app_widget_name: 'Titan TV (Dev)'
-  org_id: 384
-  app_id: 301
+  org_id: 1
+  app_id: 1
   app_params: '?'
   app_subdirectory: 'titantv'
 

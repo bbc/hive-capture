@@ -22,7 +22,7 @@ RSpec.describe 'Hive Capture Application' do
 
   describe 'AIT' do
     it 'should allow access to the AIT' do
-      get '/ait'
+      get '/ait/'
       expect(last_response).to be_ok
     end
   end
