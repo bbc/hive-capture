@@ -56,7 +56,7 @@ class HiveCapture < Sinatra::Base
       Chamber.env.cert? && Chamber.env.cert,
     )
 
-    response = db.register(mac: mac(request.ip), device_model: model, device_brand: brand, device_type: device_type).to_json
+    response = db.register(mac: mac(request.ip), device_range: model, device_brand: brand, device_type: device_type).to_json
     if params.has_key?('callback')
       "#{params['callback']}(#{response});"
     else
