@@ -71,7 +71,7 @@ class HiveCapture < Sinatra::Base
       Chamber.env.cert? && Chamber.env.cert,
     )
 
-    response = db.poll(params[:id]).to_json
+    response = db.set_application(params[:id].to_i, Chamber.env.app_name).to_json
     if params.has_key?('callback')
       "#{params['callback']}(#{response});"
     else
