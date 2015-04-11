@@ -2,7 +2,7 @@
 
 require 'pathname'
 ENV['BUNDLE_GEMFILE'] ||= File.expand_path(
-  '../Gemfile',
+  '../../Gemfile',
   Pathname.new(__FILE__).realpath
 )
 require 'rubygems'
