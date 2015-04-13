@@ -20,15 +20,15 @@ GEM
       thor (~> 0.19.1)
     crack (0.4.2)
       safe_yaml (~> 1.0.0)
+    daemons (1.2.2)
     diff-lcs (1.2.5)
     docile (1.1.5)
+    eventmachine (1.0.7)
     hashie (3.4.0)
     i18n (0.7.0)
     json (1.8.2)
     minitest (5.5.1)
     multi_json (1.11.0)
-    puma (2.11.1)
-      rack (>= 1.1, < 2.0)
     rack (1.6.0)
     rack-protection (1.5.3)
       rack
@@ -57,6 +57,10 @@ GEM
       rack (~> 1.4)
       rack-protection (~> 1.4)
       tilt (~> 1.3, >= 1.3.4)
+    thin (1.6.3)
+      daemons (~> 1.0, >= 1.0.9)
+      eventmachine (~> 1.0)
+      rack (~> 1.0)
     thor (0.19.1)
     thread_safe (0.3.5)
     tilt (1.4.1)
@@ -72,9 +76,9 @@ PLATFORMS
 DEPENDENCIES
   chamber
   devicedb_comms!
-  puma
   rack-test
   rspec
   simplecov
   sinatra
+  thin
   webmock

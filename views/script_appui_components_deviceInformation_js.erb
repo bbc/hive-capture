@@ -70,17 +70,30 @@ require.def("<%= APPLICATION_ID %>/appui/components/deviceInformation",
         polling_count = 0;
 
         // Start polling
+        p_failed = false;
+        messages = ['[No message]'];
+        var add_message = function(line){
+          messages.unshift(line);
+          if (messages.length > 5) {
+            messages.pop();
+          }
+        }
         var poll = function(){
           var callbacks = {
             onSuccess : function( json ) {
               taskInfo = json;
               setTimeout(poll, 5000);
+              if ( p_failed ) {
+                p_failed = false;
+                add_message('Polling recovered');
+              }
               if (device_id == parseInt(device_id, 10)) {
                 if ( taskInfo.action ) {
                   if ( taskInfo.action.action_type == 'redirect' ) {
+                    add_message("Redirect to " + taskInfo.action.body);
                     application.launchAppFromURL(taskInfo.action.body, {}, [], true);
                   } else if ( taskInfo.action.action_type == 'message' ) {
-                    widgets['message'].setText(taskInfo.action.body);
+                    add_message(taskInfo.action.body);
                   }
                 } else {
                   // Something
@@ -91,12 +104,15 @@ require.def("<%= APPLICATION_ID %>/appui/components/deviceInformation",
                 device_id=parseInt(taskInfo.id);
                 widgets['ddbid'].setText(device_id);
               }
+              widgets['message'].setText(messages.join('<br>'));
               widgets['status'].setText(taskInfo.status);
               widgets['hive_name'].setText(taskInfo.hive ? taskInfo.hive : '<em>None</em>');
             },
             onError : function( response ) {
               setTimeout(poll, 5000);
-              widgets['message'].setText("Polling failed: " + response);
+              add_message("Polling failed: " + response);
+              widgets['message'].setText(messages.join('<br>'));
+              p_failed = true;
             }
           };
 
@@ -107,7 +123,7 @@ require.def("<%= APPLICATION_ID %>/appui/components/deviceInformation",
           } else {
             url = '<%= url('poll?callback=%callback%') %>';
           }
-          device.loadScript( url, /%callback%/, callbacks, 5000 );
+          device.loadScript( url, /%callback%/, callbacks, 180 * 1000 );
         };
 
         poll();
