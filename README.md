@@ -2,4 +2,8 @@
 
 To run:
 
-    puma config.ru
+    rackup
+
+or, to run in the background,
+
+    rackup -D

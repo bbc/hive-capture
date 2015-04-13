@@ -18,6 +18,7 @@ Chamber.load(
 
 class HiveCapture < Sinatra::Base
   require 'hive_capture/antie_config'
+  require 'hive_capture/data_store'
   helpers AntieConfig
 
   APPLICATION_ID = 'hive_capture'
@@ -71,11 +72,25 @@ class HiveCapture < Sinatra::Base
       Chamber.env.cert? && Chamber.env.cert,
     )
 
-    response = db.set_application(params[:id].to_i, Chamber.env.app_name).to_json
+    t = Time.new
+    response = db.set_application(params[:id].to_i, Chamber.env.app_name)
+    delay = Time.new - t
+    HiveCapture::DataStore.poll_delay(params[:id].to_i, delay)
+p response
+p HiveCapture::DataStore.get_poll_delays
+
+    if ! response['action']
+      response['action'] = {
+        'action_type' => 'message',
+        'body' => "Last poll: %0.2f seconds" % delay
+      }
+    end
+p response
+
     if params.has_key?('callback')
-      "#{params['callback']}(#{response});"
+      "#{params['callback']}(#{response.to_json});"
     else
-      response
+      response.to_json
     end
   end
 
