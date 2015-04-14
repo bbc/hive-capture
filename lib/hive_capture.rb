@@ -45,6 +45,7 @@ class HiveCapture < Sinatra::Base
   end
 
   get '/' do
+    content_type index_mime_type
     session['whoami'] = params['whoami'] || session['whoami']
     session['url'] = request.url.split(/\?/)[0]
     erb :index
