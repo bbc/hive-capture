@@ -21,3 +21,5 @@ production:
 rspec:
   app_name: 'Titan TV (RSpec)'
   devicedb_url: 'http://test-devicedb'
+  device_config: 'spec/devices'
+  page_strategy: 'spec/pagestrategy'
