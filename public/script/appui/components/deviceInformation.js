@@ -1,4 +1,4 @@
-require.def("<%= APPLICATION_ID %>/appui/components/deviceInformation",
+require.def("hive_capture/appui/components/deviceInformation",
   [
     "antie/application",
     "antie/widgets/component",
@@ -18,13 +18,6 @@ require.def("<%= APPLICATION_ID %>/appui/components/deviceInformation",
         device_id='-';
         device_status = '---';
         hive_name = '---';
-        device_brand = '<%= brand %>';
-        device_model = '<%= model %>';
-        device_config = '<%= configuration %>';
-        device_ipaddr = '<%= request.ip %>';
-        whoami = '<%= whoami %>';
-        device_mac = '<%= mac(request.ip) %>';
-        titantv_url = '<%= url %>';
         ddbid_label = new Label("ddbid", device_id);
         ddbid.appendChildWidget(ddbid_label);
         this.appendChildWidget(ddbid);
@@ -119,9 +112,9 @@ require.def("<%= APPLICATION_ID %>/appui/components/deviceInformation",
           polling_count = polling_count + 1;
           widgets['polling_count'].setText(polling_count);
           if (device_id == parseInt(device_id, 10)) {
-            url = '<%= url('poll/') %>' + device_id + '?callback=%callback%';
+            url = poll_url + device_id + '?callback=%callback%';
           } else {
-            url = '<%= url('poll?callback=%callback%') %>';
+            url = poll_url + '?callback=%callback%';
           }
           device.loadScript( url, /%callback%/, callbacks, 180 * 1000 );
         };
