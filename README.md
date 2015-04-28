@@ -11,6 +11,10 @@ Add the following lines to your Apache config:
       # !!! Be sure to point DocumentRoot to 'public'!
       DocumentRoot /path/to/hive-capture/public
       <Directory /path/to/hive-capture/public>
+        # Set environment as required
+        SetEnv HIVE_ENVIRONMENT production
+        SetEnv RACK_ENV production
+
         # This relaxes Apache security settings.
         AllowOverride all
         # MultiViews must be turned off.
