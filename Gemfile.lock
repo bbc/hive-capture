@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:bbc/devicedb_comms.git
-  revision: ffcddc8ef2e5283bc248075b33954b9ff1ad77db
+  revision: 2b89a909a81a3e2342b166d7e3333035283fc070
   specs:
     devicedb_comms (0.0.14)
       activesupport
@@ -24,16 +24,19 @@ GEM
     diff-lcs (1.2.5)
     docile (1.1.5)
     eventmachine (1.0.7)
+    gruff (0.5.1)
+      rmagick
     hashie (3.4.0)
     i18n (0.7.0)
     json (1.8.2)
-    minitest (5.5.1)
+    minitest (5.6.1)
     multi_json (1.11.0)
     rack (1.6.0)
     rack-protection (1.5.3)
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
+    rmagick (2.15.0)
     rspec (3.2.0)
       rspec-core (~> 3.2.0)
       rspec-expectations (~> 3.2.0)
@@ -76,6 +79,7 @@ PLATFORMS
 DEPENDENCIES
   chamber
   devicedb_comms!
+  gruff
   rack-test
   rspec
   simplecov
