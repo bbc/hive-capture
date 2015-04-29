@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'sinatra'
 gem 'chamber'
 gem 'thin'
+gem 'gruff'
 
 gem 'devicedb_comms', git: 'git@github.com:bbc/devicedb_comms.git'
 
