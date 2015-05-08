@@ -1,4 +1,4 @@
-require.def("<%= APPLICATION_ID %>/appui/components/hiveStats",
+require.def("hive_capture/appui/components/hiveStats",
   [],
   function () {
     return Component.extend({

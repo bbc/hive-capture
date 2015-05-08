@@ -51,14 +51,14 @@ class HiveCapture < Sinatra::Base
     erb :index
   end
 
-  get '/poll' do
+  get '/poll/' do
     content_type :js
     db = DeviceDBComms::Device.new(
       Chamber.env.devicedb_url,
       Chamber.env.cert? && Chamber.env.cert,
     )
 
-    response = db.register(mac: mac(request.ip), device_range: model, device_brand: brand, device_type: device_type).to_json
+    response = db.register(mac: mac(request.ip), device_model: model, device_brand: brand, device_type: device_type).to_json
     if params.has_key?('callback')
       "#{params['callback']}(#{response});"
     else
@@ -95,33 +95,7 @@ p response
     end
   end
 
-  # Main page
-  get '/script/appui/capture.js' do
-    erb :script_appui_capture_js
-  end
-
-  # Components
-  get '/script/appui/components/titleContainer.js' do
-    erb :script_appui_components_titleContainer_js
-  end
-
-  get '/script/appui/components/deviceInformation.js' do
-    erb :script_appui_components_deviceInformation_js,
-        locals: {
-          whoami: session['whoami'],
-          url: session['url']
-        }
-  end
-
-  get '/script/appui/components/hiveStats.js' do
-    erb :script_appui_components_hiveStats_js
-  end
-
   # Layouts
-  get '/script/appui/layouts/:size.js' do
-    erb :script_appui_layout_js
-  end
-
   get '/style/layouts/:size.css' do
     erb :style_layouts_css
   end

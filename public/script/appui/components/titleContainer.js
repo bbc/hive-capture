@@ -1,4 +1,4 @@
-require.def("<%= APPLICATION_ID %>/appui/components/titleContainer",
+require.def("hive_capture/appui/components/titleContainer",
   [
     "antie/widgets/component",
     "antie/widgets/container",
@@ -12,7 +12,7 @@ require.def("<%= APPLICATION_ID %>/appui/components/titleContainer",
         this._super("titleContainer");
 
         main_title = new Container();
-        main_title.appendChildWidget(new Label("deviceTitle", "<%= Chamber.env.app_name %>"));
+        main_title.appendChildWidget(new Label("deviceTitle", appName));
         title_name = new Container();
         deviceName = new Label("deviceName", "---");
         title_name.appendChildWidget(deviceName);
