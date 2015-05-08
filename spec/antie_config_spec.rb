@@ -30,12 +30,20 @@ class HiveCapture
     device_body
   end
 
+  get '/spec/mime_type' do
+    index_mime_type
+  end
+
   get '/spec/configuration' do
     configuration
   end
 
   get '/spec/configuration_string' do
     configuration_string(params['app_id'])
+  end
+
+  get '/spec/page_strategy' do
+    page_strategy(params['dir'] == 'true')
   end
 end
 
@@ -97,29 +105,61 @@ RSpec.describe HiveCapture::AntieConfig do
 
   describe '#doc_type' do
     it 'returns the default doc type' do
-      get '/spec/doc_type'
+      get '/spec/doc_type', { brand: 'test_brand_default', model: 'test_model_default' }
       expect(last_response.body).to eq '<!DOCTYPE html>'
+    end
+
+    it 'returns a non-default doc type' do
+      get '/spec/doc_type', { brand: 'test_brand', model: 'test_model' }
+      expect(last_response.body).to eq '<!DOCTYPE test_doctype>'
     end
   end
 
   describe '#root_element' do
     it 'returns the default root element' do
-      get '/spec/root_element'
+      get '/spec/root_element', { brand: 'test_brand_default', model: 'test_model_default' }
       expect(last_response.body).to eq '<html>'
+    end
+
+    it 'returns a non-default root element' do
+      get '/spec/root_element', { brand: 'test_brand', model: 'test_model' }
+      expect(last_response.body).to eq '<html test_root_element>'
     end
   end
 
   describe '#device_header' do
     it 'returns the default device_header' do
-      get '/spec/device_header'
+      get '/spec/device_header', { brand: 'test_brand_default', model: 'test_model_default' }
       expect(last_response.body).to eq ''
+    end
+
+    it 'returns a non-default device_header' do
+      get '/spec/device_header', { brand: 'test_brand', model: 'test_model' }
+      expect(last_response.body).to eq 'Test header text'
     end
   end
 
   describe '#device_body' do
     it 'returns the default device_body' do
-      get '/spec/device_body'
+      get '/spec/device_body', { brand: 'test_brand_default', model: 'test_model_default' }
       expect(last_response.body).to eq ''
+    end
+
+    it 'returns a non-default device_body' do
+      get '/spec/device_body', { brand: 'test_brand', model: 'test_model' }
+      expect(last_response.body).to eq 'Test body text'
+    end
+  end
+
+  describe '#mime_type' do
+    it 'returns the default mime_type' do
+      get '/spec/mime_type', { brand: 'test_brand_default', model: 'test_model_default' }
+      expect(last_response.body).to eq 'text/html'
+    end
+
+    it 'returns a non-default mime_type' do
+      get '/spec/mime_type', { brand: 'test_brand', model: 'test_model' }
+      expect(last_response.body).to eq 'test/mimetype'
     end
   end
 
@@ -127,6 +167,11 @@ RSpec.describe HiveCapture::AntieConfig do
     it 'returns the configuration name for the device and model' do
       get '/spec/configuration', { brand: 'test_brand', model: 'test_model' }
       expect(last_response.body).to eq 'test_brand-test_model-default'
+    end
+
+    it 'returns the default name for an unknown device and model' do
+      get '/spec/configuration', { brand: 'unknown_brand', model: 'unknown_model' }
+      expect(last_response.body).to eq 'default-webkit-default'
     end
   end
 
@@ -137,7 +182,15 @@ RSpec.describe HiveCapture::AntieConfig do
     end
   end
 
-  describe '#width' do
+  describe '#page_strategy' do
+    it 'returns the correct page strategy' do
+      get '/spec/page_strategy', { dir: false, brand: 'test_brand', model: 'test_model' }
+      expect(last_response.body).to eq 'test_page_strategy'
+    end
 
+    it 'returns the page strategy directory' do
+      get '/spec/page_strategy', { dir: true, brand: 'test_brand', model: 'test_model' }
+      expect(last_response.body).to eq 'spec/pagestrategy/test_page_strategy'
+    end
   end
 end
