@@ -18,7 +18,7 @@ Chamber.load(
   namespaces: { environment: ENV['HIVE_ENVIRONMENT'] || 'development' }
 )
 
-FileUtils.mkdir_p(Chamber.env.data_store) if ! Dir.exists?(Chamber.env.data_store)
+FileUtils.mkdir_p(Chamber.env.stats_directory) if ! Dir.exists?(Chamber.env.stats_directory)
 
 class HiveCapture < Sinatra::Base
   require 'hive_capture/antie_config'
@@ -89,7 +89,7 @@ class HiveCapture < Sinatra::Base
     response = db.set_application(params[:id].to_i, Chamber.env.app_name)
     delay = Time.new - t
     HiveCapture::DataStore.poll_delay(params[:id].to_i, delay)
-    data_dump = SimpleStatsStore::FileDump.new(Chamber.env.data_store)
+    data_dump = SimpleStatsStore::FileDump.new(Chamber.env.stats_directory)
     data_dump.write(:delay, { timestamp: Time.now.to_s, device_id: params[:id].to_i, delay: delay} )
 
     if ! response['action']
@@ -133,7 +133,7 @@ class HiveCapture < Sinatra::Base
           app_widget_name: Chamber.env[:app_widget_name] || 'No Widget Name',
           app_params: Chamber.env[:app_params] || '?',
           app_name: Chamber.env[:app_name] || 'No Application Name',
-          app_subdirectory: "#{Chamber.env[:app_subdirectory]}/" || ''
+          app_subdirectory: "#{Chamber.env[:app_subdirectory]}" || ''
         }
   end
 

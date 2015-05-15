@@ -58,7 +58,7 @@
                 </mhp:mhpVersion>
             </mhp:applicationDescriptor>
             <mhp:applicationTransport xsi:type="mhp:HTTPTransportType">
-                <mhp:URLBase>http://<%= "#{request.host_with_port}/#{app_subdirectory}" %></mhp:URLBase>
+                <mhp:URLBase>http://<%= "#{request.host_with_port}/#{app_subdirectory}/" %></mhp:URLBase>
             </mhp:applicationTransport>
             <mhp:applicationLocation>?<%= request.url.split(/\?/, 2)[1] %></mhp:applicationLocation>
         </mhp:Application>

@@ -36,7 +36,6 @@ class HiveCapture
         if Time.new >= t_next
           image = Gruff::Line.new
           image.title = 'Polling response times'
-          image.minimum_value = 0
           image.labels = {}
           cutoff = Time.new - 30 * 60
           6.times do |i|
@@ -54,6 +53,7 @@ class HiveCapture
           data.keys.sort{ |a, b| a.to_i <=> b.to_i }.each do |id|
             image.dataxy(id.to_s, data[id].sort { |a, b| a[0] <=> b[0] })
           end
+          image.minimum_value = 0
           image.write("#{@images}/delays.png")
 
           t_next += 30
