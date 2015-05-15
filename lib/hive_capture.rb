@@ -10,15 +10,20 @@ require 'bundler/setup'
 require 'sinatra'
 require 'chamber'
 require 'devicedb_comms'
+require 'simple_stats_store/file_dump'
+require 'fileutils'
 
 Chamber.load(
   basepath: File.expand_path('../..', Pathname.new(__FILE__).realpath),
   namespaces: { environment: ENV['HIVE_ENVIRONMENT'] || 'development' }
 )
 
+FileUtils.mkdir_p(Chamber.env.data_store) if ! Dir.exists?(Chamber.env.data_store)
+
 class HiveCapture < Sinatra::Base
   require 'hive_capture/antie_config'
   require 'hive_capture/data_store'
+  require 'hive_capture/stats_server'
   helpers AntieConfig
 
   APPLICATION_ID = 'hive_capture'
@@ -28,6 +33,13 @@ class HiveCapture < Sinatra::Base
 
   enable :sessions
   set :bind, '0.0.0.0'
+
+  stats = HiveCapture::StatsServer.new(
+    data_dump: Chamber.env.stats_directory,
+    database: Chamber.env.stats_database,
+    images: Chamber.env.images
+  )
+  stats.start
 
   configure do
     mime_type :js, 'text/javascript'
@@ -77,8 +89,8 @@ class HiveCapture < Sinatra::Base
     response = db.set_application(params[:id].to_i, Chamber.env.app_name)
     delay = Time.new - t
     HiveCapture::DataStore.poll_delay(params[:id].to_i, delay)
-p response
-p HiveCapture::DataStore.get_poll_delays
+    data_dump = SimpleStatsStore::FileDump.new(Chamber.env.data_store)
+    data_dump.write(:delay, { timestamp: Time.now.to_s, device_id: params[:id].to_i, delay: delay} )
 
     if ! response['action']
       response['action'] = {
@@ -86,7 +98,6 @@ p HiveCapture::DataStore.get_poll_delays
         'body' => "Last poll: %0.2f seconds" % delay
       }
     end
-p response
 
     if params.has_key?('callback')
       "#{params['callback']}(#{response.to_json});"
@@ -107,7 +118,7 @@ p response
         locals: {
           author: Chamber.env[:author] || 'E Noether',
           app_name: Chamber.env[:app_name].upcase || 'NO APPLICATION NAME',
-          app_subdirectory: "#{Chamber.env[:app_subdirectory]}/" || ''
+          app_subdirectory: "#{Chamber.env[:app_subdirectory]}" || ''
         }
   end
 
