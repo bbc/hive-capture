@@ -17,10 +17,10 @@
   </script>
 
   <!-- Load require.js -->
-  <script type='text/javascript' src=<%= url('antie/static/script/lib/require.js') %>></script>
+  <script type='text/javascript' src='<%= url('antie/static/script/lib/require.js') %>'></script>
 
   <!-- Load application base style sheet -->
-  <link rel='stylesheet' href=<%= url('style/base.css') %>/>
+  <link rel='stylesheet' href='<%= url('style/base.css') %>'/>
 
   <!-- Expose device config to framework -->
   <script>
@@ -47,6 +47,7 @@
   <!-- Load the application and launch -->
   <script type='text/javascript'>
     var appName = "<%= Chamber.env.app_name %>";
+    var device_name = "---";
     var device_brand = "<%= brand %>";
     var device_model = "<%= model %>";
     var device_config = "<%= configuration %>";
