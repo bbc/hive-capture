@@ -19,11 +19,13 @@ require.def("hive_capture/appui/components/hiveStats",
 
         // Check for stats
         var getStats = function(){
-          if ( device_name === 'undefined' || device_name === '---' ) {
-            self.statsImage.setSrc('delays.png');
-          } else {
-            self.statsImage.setSrc(device_name + '-latest.png');
-          }
+          // Only delays graph exists at the moment
+          // TODO Check if 'device_name' is the correct variable
+          //if ( device_name === 'undefined' || device_name === '---' ) {
+            self.statsImage.setSrc('delays.png?' + (new Date).getTime());
+          //} else {
+          //  self.statsImage.setSrc(device_name + '-latest.png');
+          //}
           setTimeout(getStats, 5000);
         };
 

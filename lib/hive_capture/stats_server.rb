@@ -43,7 +43,7 @@ class HiveCapture
           end
           data = {}
           Delay.where('timestamp > ?', cutoff.to_s).each do |row|
-            point = [DataTime.parse(row.timestamp).to_time.to_i, row.delay]
+            point = [DateTime.parse(row.timestamp).to_time.to_i, row.delay]
             if data.has_key?(row.device_id.to_s)
               data[row.device_id.to_s] << point
             else
