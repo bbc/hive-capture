@@ -1,5 +1,16 @@
 # hive-capture
 
+## Set up
+
+ImageMagick is required for the rmagick gem, used for the graphs, so this must be
+installed first, together with some development libraries:
+
+    sudo apt-get install imagemagick libmagickcore-dev libmagickwand-dev
+
+After this, the dependencies can be installed:
+
+    bundle install
+
 ## Using Apache
 
 Install Passenger using http://recipes.sinatrarb.com/p/deployment/apache_with_passenger
