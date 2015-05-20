@@ -54,6 +54,8 @@ class HiveCapture
             image.dataxy(id.to_s, data[id].sort { |a, b| a[0] <=> b[0] })
           end
           image.minimum_value = 0
+          image.y_axis_label = 'Seconds'
+          image.x_axis_label = 'Minutes before now'
           image.write("#{@images}/delays.png")
 
           t_next += 30
