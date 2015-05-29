@@ -18,12 +18,9 @@ Chamber.load(
   namespaces: { environment: ENV['HIVE_ENVIRONMENT'] || 'development' }
 )
 
-FileUtils.mkdir_p(Chamber.env.stats_directory) if ! Dir.exists?(Chamber.env.stats_directory)
-
 class HiveCapture < Sinatra::Base
   require 'hive_capture/antie_config'
   require 'hive_capture/data_store'
-  require 'hive_capture/stats_server'
   helpers AntieConfig
 
   APPLICATION_ID = 'hive_capture'
@@ -33,13 +30,6 @@ class HiveCapture < Sinatra::Base
 
   enable :sessions
   set :bind, '0.0.0.0'
-
-  stats = HiveCapture::StatsServer.new(
-    data_dump: Chamber.env.stats_directory,
-    database: Chamber.env.stats_database,
-    images: Chamber.env.images
-  )
-  stats.start
 
   configure do
     mime_type :js, 'text/javascript'
