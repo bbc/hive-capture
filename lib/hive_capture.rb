@@ -60,7 +60,7 @@ class HiveCapture < Sinatra::Base
       Chamber.env.cert? && Chamber.env.cert,
     )
 
-    response = db.register(mac: mac(request.ip), device_model: model, device_brand: brand, device_type: device_type).to_json
+    response = db.register(mac: mac, device_model: model, device_brand: brand, device_type: device_type).to_json
     if params.has_key?('callback')
       "#{params['callback']}(#{response});"
     else
@@ -143,13 +143,17 @@ class HiveCapture < Sinatra::Base
     - height(size) / 2
   end
 
-  def mac(ip)
-    `ping -c 1 #{ip}`
+  def ip_address
+    request.ip == '127.0.0.1' ? @env['HTTP_X_FORWARDED_FOR'] : request.ip
+  end
+
+  def mac
+    `ping -c 1 #{ip_address}`
     mac = '00:00:00:00:00:00'
     if RUBY_PLATFORM =~ /darwin/
-      mac = `arp -n #{ip} | awk '{ print \$4 }'`.chomp
+      mac = `arp -n #{ip_address} | awk '{ print \$4 }'`.chomp
     elsif RUBY_PLATFORM =~ /linux/
-      mac = `arp -an #{ip} | awk '{ print \$4 }'`.chomp
+      mac = `arp -an #{ip_address} | awk '{ print \$4 }'`.chomp
     end
 
     # Match a valid MAC address or return the default
