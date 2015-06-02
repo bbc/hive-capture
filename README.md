@@ -59,7 +59,7 @@ To configure the Apache server to redirect to the a thin server running on port
     Allow from all
   </Proxy>
   ProxyRequests Off
-  ServerName titantv.dev.pod.bbc
+  ServerName example.com
   ProxyPass / http://localhost:9292/
   ProxyPassReverse / http://localhost:9292/
 </VirtualHost>
