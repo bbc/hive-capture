@@ -4,8 +4,8 @@ require 'cgi'
 
 class HiveCapture
   # Override mac function
-  def mac(ip)
-    'aa:aa:%02x:%02x:%02x:%02x' % ip.split(/\./)
+  def mac
+    'aa:aa:%02x:%02x:%02x:%02x' % ip_address.split(/\./)
   end
 end
 
@@ -44,7 +44,7 @@ RSpec.describe 'Hive Capture Polling' do
     before(:each) do
       device_details.each do |s|
         stub_request(:post, "http://test-devicedb/devices/register.json").
-                 with(:body => "device_brand=#{CGI.escape(s[:brand])}&device_model=#{CGI.escape(s[:model])}&device_type=#{CGI.escape(s[:type])}&mac=#{CGI.escape(s[:mac])}",
+                 with(:body => "device_brand=#{CGI.escape(s[:brand])}&device_range=#{CGI.escape(s[:model])}&device_type=#{CGI.escape(s[:type])}&mac=#{CGI.escape(s[:mac])}",
                       :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Ruby'}).
                  to_return(:status => 200, :body => register_response.merge(id: s[:id], name: s[:name], status: s[:status], hive: s[:hive]).to_json, :headers => {})
       end
@@ -52,7 +52,7 @@ RSpec.describe 'Hive Capture Polling' do
 
     it 'should allow access to the polling page' do
       d = device_details[0]
-      get '/poll',
+      get '/poll/',
         { brand: d[:brand], brand: d[:brand], model: d[:model], type: d[:type] },
         { 'REMOTE_ADDR' => d[:ip] }
       expect(last_response).to be_ok
@@ -60,7 +60,7 @@ RSpec.describe 'Hive Capture Polling' do
 
     it 'should register an unknown device' do
       d = device_details[0]
-      get '/poll',
+      get '/poll/',
         { brand: d[:brand], brand: d[:brand], model: d[:model], type: d[:type] },
         { 'REMOTE_ADDR' => d[:ip] }
       parsed_response = JSON.parse(last_response.body)
@@ -70,11 +70,11 @@ RSpec.describe 'Hive Capture Polling' do
     it 'should register two different devices' do
       d1 = device_details[0]
       d2 = device_details[1]
-      get '/poll',
+      get '/poll/',
         { brand: d1[:brand], brand: d1[:brand], model: d1[:model], type: d1[:type] },
         { 'REMOTE_ADDR' => d1[:ip] }
       id1 = JSON.parse(last_response.body)['id']
-      get '/poll',
+      get '/poll/',
         { brand: d2[:brand], brand: d2[:brand], model: d2[:model], type: d2[:type] },
         { 'REMOTE_ADDR' => d2[:ip] }
       parsed_response = JSON.parse(last_response.body)
@@ -83,7 +83,7 @@ RSpec.describe 'Hive Capture Polling' do
 
     it 'should return a name, status and hive' do
       d = device_details[0]
-      get '/poll',
+      get '/poll/',
         { brand: d[:brand], brand: d[:brand], model: d[:model], type: d[:type] },
         { 'REMOTE_ADDR' => d[:ip] }
       parsed_response = JSON.parse(last_response.body)
