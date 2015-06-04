@@ -3,7 +3,9 @@ require 'spec_helper.rb'
 RSpec.describe 'Hive Capture Application' do
   describe 'Index' do
     it 'should allow access to the home page' do
-      get '/'
+      get '/',
+        {},
+        { 'REMOTE_ADDR' => '1.2.3.4' }
       expect(last_response).to be_ok
     end
 
