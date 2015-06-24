@@ -30,6 +30,7 @@ class HiveCapture < Sinatra::Base
 
   enable :sessions
   set :bind, '0.0.0.0'
+  set :protection, except: :frame_options
 
   configure do
     mime_type :js, 'text/javascript'
@@ -60,11 +61,18 @@ class HiveCapture < Sinatra::Base
       Chamber.env.cert? && Chamber.env.cert,
     )
 
-    response = db.register(mac: mac, device_range: model, device_brand: brand, device_type: device_type).to_json
+    response = db.register(mac: mac, device_range: model, device_brand: brand, device_type: device_type)
+    if response.has_key?('id')
+      begin
+        FileUtils.ln_s("#{settings.public_folder}/delays.png", "#{settings.public_folder}/#{response['id']}.png")
+      rescue Errno::EEXIST
+        puts "Image for #{response['id']} already exists"
+      end
+    end
     if params.has_key?('callback')
-      "#{params['callback']}(#{response});"
+      "#{params['callback']}(#{response.to_json});"
     else
-      response
+      response.to_json
     end
   end
 
@@ -159,6 +167,6 @@ class HiveCapture < Sinatra::Base
     # Match a valid MAC address or return the default
     /^([0-9a-fA-F]{1,2}:){5}[0-9a-fA-F]{1,2}$/ =~ mac ?
       mac.split(/:/).map { |n| n.rjust(2, '0') }.join(':') :
-      '00:00:00:00:00:00'
+      '00:00:00:00:00:01'
   end
 end
