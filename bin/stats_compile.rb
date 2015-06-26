@@ -47,6 +47,23 @@ p = SimpleStatsStore::Server.new(
   name: 'STATS_SERVER'
 ).run do
   if Time.new >= t_next
+    image = Gruff::Scatter.new
+    # This doesn't currently work for scatter graphs
+    image.labels = { 0 => '0', 5 => '5', 10 => '10' }
+
+    t_0 = Time.now
+    Delay.group('device_id').having('timestamp = MAX(timestamp)').each do |d|
+      t = (t_0 - Time.parse(d.timestamp)).to_f
+      if t <= 10
+        image.data(d.device_id, [t], [d.delay])
+      end
+    end
+    image.minimum_value = 0
+    image.title = "Latest poll times - #{t_0.strftime("%H:%M %d/%m/%y")}"
+    image.x_axis_label = 'Time since last poll (s)'
+    image.y_axis_label = 'Last poll delay (s)'
+    image.write("#{images}/delays.png")
+
     image = Gruff::Line.new
     image.title = 'Polling response times'
     image.labels = {}
@@ -69,7 +86,7 @@ p = SimpleStatsStore::Server.new(
     image.minimum_value = 0
     image.y_axis_label = 'Seconds'
     image.x_axis_label = 'Minutes before now'
-    image.write("#{images}/delays.png")
+    image.write("#{images}/delays-line.png")
 
     t_next += 30
   end
