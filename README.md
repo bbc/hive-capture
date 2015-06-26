@@ -41,11 +41,11 @@ Add the following lines to your Apache config:
 
 To run:
 
-    rackup
+    rackup -Othreaded
 
 or, to run in the background,
 
-    rackup -D
+    rackup -Othreaded -D
 
 ## Running behind a proxy
 
