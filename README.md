@@ -41,11 +41,11 @@ Add the following lines to your Apache config:
 
 To run:
 
-    rackup
+    HIVE_ENVIRONMENT=production thin start --threaded -p <port>
 
 or, to run in the background,
 
-    rackup -D
+    HIVE_ENVIRONMENT=production thin start --threaded -p <port> -d
 
 ## Running behind a proxy
 
