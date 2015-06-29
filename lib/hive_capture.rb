@@ -32,6 +32,14 @@ class HiveCapture < Sinatra::Base
   set :bind, '0.0.0.0'
   set :protection, except: :frame_options
 
+  DeviceDBComms.configure do |config|
+    config.url = Chamber.env.devicedb_url
+    if Chamber.env.cert?
+      config.pem_file = Chamber.env.cert
+      config.ssl_verify_mode = OpenSSL::SSL::VERIFY_NONE
+    end
+  end
+
   configure do
     mime_type :js, 'text/javascript'
     mime_type :css, 'text/css'
@@ -56,10 +64,7 @@ class HiveCapture < Sinatra::Base
 
   get '/poll/' do
     content_type :js
-    db = DeviceDBComms::Device.new(
-      Chamber.env.devicedb_url,
-      Chamber.env.cert? && Chamber.env.cert,
-    )
+    db = DeviceDBComms::Device.new
 
     response = db.register(mac: mac, device_range: model, device_brand: brand, device_type: device_type)
     if response.has_key?('id')
@@ -78,10 +83,7 @@ class HiveCapture < Sinatra::Base
 
   get '/poll/:id' do
     content_type :js
-    db = DeviceDBComms::Device.new(
-      Chamber.env.devicedb_url,
-      Chamber.env.cert? && Chamber.env.cert,
-    )
+    db = DeviceDBComms::Device.new
 
     t = Time.new
     response = db.set_application(params[:id].to_i, Chamber.env.app_name)
