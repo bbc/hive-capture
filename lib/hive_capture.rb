@@ -33,7 +33,7 @@ class HiveCapture < Sinatra::Base
   set :protection, except: :frame_options
 
   DeviceDBComms.configure do |config|
-    config.url = Chamber.env.devicedb_url,
+    config.url = Chamber.env.devicedb_url
     if Chamber.env.cert?
       config.pem_file = Chamber.env.cert
       config.ssl_verify_mode = OpenSSL::SSL::VERIFY_NONE
