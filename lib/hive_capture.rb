@@ -154,7 +154,7 @@ class HiveCapture < Sinatra::Base
   end
 
   def ip_address
-    request.ip == '127.0.0.1' ? @env['HTTP_X_FORWARDED_FOR'].split(',').[0] : request.ip
+    request.ip == '127.0.0.1' ? @env['HTTP_X_FORWARDED_FOR'].split(',')[0] : request.ip
   end
 
   def mac
