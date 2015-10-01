@@ -58,6 +58,7 @@
     var device_mac = "<%= mac %>";
     var titantv_url = "<%= session['url'] %>";
     var poll_url = "<%= url('poll/') %>";
+    var device_queues = [];
 
     require(
       [ '<%= APPLICATION_ID %>/appui/capture' ],
