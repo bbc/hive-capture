@@ -31,6 +31,7 @@ require.def("hive_capture/appui/components/deviceInformation",
           device_brand: { name: "Brand", value: device_brand },
           device_model: { name: "Model", value: device_model },
           device_config: { name: "Configuration", value: device_config },
+          device_queues: { name: "Queues", value: device_queues.join() },
           device_ipaddr: { name: "IP Address", value: device_ipaddr },
           whoami: { name: "WHOAMI", value: whoami },
           device_mac: { name: "MAC Address", value: device_mac },
@@ -95,6 +96,11 @@ require.def("hive_capture/appui/components/deviceInformation",
                 //document.getElementById('deviceName').textContent = taskInfo.name;
                 deviceName.setText(taskInfo.name);
                 device_id=parseInt(taskInfo.id);
+                device_queues=[];
+                for(var i = 0; i < taskInfo.device_queues.length; i++) {
+                  device_queues.push(taskInfo.device_queues[i].name);
+                }
+                widgets['device_queues'].setText(device_queues.join(", "));
                 widgets['ddbid'].setText(device_id);
               }
               widgets['message'].setText(messages.join('<br>'));
