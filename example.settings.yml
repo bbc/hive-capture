@@ -1,4 +1,4 @@
-# Modify as appropriate and rename a settings.yml
+# Modify as appropriate and rename to settings.yml
 
 production:
   app_name: 'Titan TV'
