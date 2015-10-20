@@ -1,0 +1,23 @@
+# Modify as appropriate and rename a settings.yml
+
+production:
+  app_name: 'Titan TV'
+  devicedb_url: 'https://devicedb_url'
+  cert: '/home/user/certs/cert.pem'
+  app_widget_name: 'Titan TV'
+  org_id: 1
+  app_id: 1
+  app_params: '?'
+  app_subdirectory: 'titantv'
+  stats_directory: '/home/user/stats'
+  stats_database: '/home/user/stats/titantv_stats.db'
+  images: '/home/user/titantv/public/images'
+  #device_detect: 'default_device_detect'
+  #device_config: 'public/antie/config/devices'
+  #page_strategy: 'public/antie/config/pagestrategy'
+
+rspec:
+  app_name: 'Titan TV (RSpec)'
+  devicedb_url: 'http://test-devicedb'
+  device_config: 'spec/devices'
+  page_strategy: 'spec/pagestrategy'
