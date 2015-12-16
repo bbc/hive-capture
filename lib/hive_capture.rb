@@ -10,6 +10,7 @@ require 'bundler/setup'
 require 'sinatra'
 require 'chamber'
 require 'devicedb_comms'
+require 'mind_meld'
 require 'simple_stats_store/file_dump'
 require 'fileutils'
 
@@ -45,6 +46,7 @@ class HiveCapture < Sinatra::Base
     mime_type :css, 'text/css'
     mime_type :rc, 'text/plain'
     mime_type :ait, 'application/vnd.dvb.ait+xml'
+    set :mind_meld, []
   end
 
   before '/script/*' do
@@ -66,6 +68,7 @@ class HiveCapture < Sinatra::Base
     content_type :js
     db = DeviceDBComms::Device.new
 
+    # DeviceDB registration
     response = db.register(mac: mac, device_range: model, device_brand: brand, device_type: device_type)
     if response.has_key?('id')
       begin
@@ -74,6 +77,49 @@ class HiveCapture < Sinatra::Base
         puts "Image for #{response['id']} already exists"
       end
     end
+
+    if params.has_key?('callback')
+      "#{params['callback']}(#{response.to_json});"
+    else
+      response.to_json
+    end
+  end
+
+  get '/mmpoll/' do
+    content_type :js
+    tmp_mind_meld = MindMeld.new(
+      url: Chamber.env.mind_meld? ? Chamber.env.mind_meld : nil ,
+      device: {
+        macs: [ mac ],
+        ips: [ ip_address ],
+        brand: brand,
+        model: model,
+        range: model,
+        device_type: 'Tv'
+      }
+    )
+
+    if tmp_mind_meld.id
+      settings.mind_meld[tmp_mind_meld.id] = tmp_mind_meld
+      response = {
+        id: tmp_mind_meld.id,
+        name: tmp_mind_meld.name,
+        device_queues: [],
+        status: 'looks good',
+        hive: 'which hive?',
+        action: { 'action_type' => 'message', 'body' => 'Doing nothing' }
+      }
+    else
+      response = {
+        id: '?',
+        name: 'Unknown',
+        device_queues: [],
+        status: 'looks bad',
+        hive: '???',
+        action: { 'action_type' => 'message', 'body' => 'Not registering' }
+      }
+    end
+
     if params.has_key?('callback')
       "#{params['callback']}(#{response.to_json});"
     else
@@ -96,6 +142,28 @@ class HiveCapture < Sinatra::Base
       response['action'] = {
         'action_type' => 'message',
         'body' => "Last poll: %0.2f seconds" % delay
+      }
+    end
+
+    if params.has_key?('callback')
+      "#{params['callback']}(#{response.to_json});"
+    else
+      response.to_json
+    end
+  end
+
+  get '/mmpoll/:id' do
+    content_type :js
+
+    if settings.mind_meld[params[:id].to_i]
+      response = settings.mind_meld[params[:id].to_i].poll
+      puts response
+      response = {
+        action: { 'action_type' => 'message', 'body' => 'Doing nothing again' }
+      }
+    else
+      response = {
+        action: { 'action_type' => 'message', 'body' => 'Doing nothing failing' }
       }
     end
 
@@ -152,5 +220,4 @@ class HiveCapture < Sinatra::Base
   def left_margin(size)
     - height(size) / 2
   end
-
 end

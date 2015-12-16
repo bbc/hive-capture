@@ -127,7 +127,7 @@ require.def("hive_capture/appui/components/deviceInformation",
 
         poll();
         //setTimeout(poll, 5000);
-      },
+      }
     });
   }
 );

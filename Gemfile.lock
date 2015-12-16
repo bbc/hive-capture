@@ -1,11 +1,3 @@
-GIT
-  remote: git@github.com:bbc/devicedb_comms.git
-  revision: ef3b7c5697b305cbd7c6c6868b04a16b7d3481ac
-  specs:
-    devicedb_comms (0.0.16)
-      activesupport
-      virtus
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -41,6 +33,9 @@ GEM
     daemons (1.2.3)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
+    devicedb_comms (0.1.1)
+      activesupport (>= 4.0, < 4.3)
+      virtus (~> 1.0)
     diff-lcs (1.2.5)
     docile (1.1.5)
     equalizer (0.0.11)
@@ -51,6 +46,8 @@ GEM
     i18n (0.7.0)
     ice_nine (0.11.1)
     json (1.8.3)
+    mind_meld (0.0.3)
+      activesupport (~> 4)
     minitest (5.7.0)
     rack (1.6.4)
     rack-protection (1.5.3)
@@ -108,8 +105,9 @@ DEPENDENCIES
   activerecord
   activerecord-rescue_from_duplicate
   chamber
-  devicedb_comms!
+  devicedb_comms
   gruff
+  mind_meld (>= 0.0.3)
   rack-test
   rspec
   simple_stats_store (>= 1.0.5)
