@@ -29,7 +29,7 @@ class HiveCapture
       # Match a valid MAC address or return the default
       /^([0-9a-fA-F]{1,2}:){5}[0-9a-fA-F]{1,2}$/ =~ mac ?
         mac.split(/:/).map { |n| n.rjust(2, '0') }.join(':') :
-        '00:00:00:00:00:01'
+        'a0:b0:c0:d0:e0:01'
     end
   end
 end

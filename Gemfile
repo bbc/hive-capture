@@ -9,7 +9,8 @@ gem 'activerecord'
 gem 'activerecord-rescue_from_duplicate'
 gem 'simple_stats_store', '>= 1.0.5'
 
-gem 'devicedb_comms', git: 'git@github.com:bbc/devicedb_comms.git'
+gem 'devicedb_comms'
+gem 'mind_meld', '>= 0.0.4'
 
 group :test do
   gem 'rspec'
