@@ -46,7 +46,7 @@ class HiveCapture < Sinatra::Base
     mime_type :css, 'text/css'
     mime_type :rc, 'text/plain'
     mime_type :ait, 'application/vnd.dvb.ait+xml'
-    set :mind_meld, []
+    set :mind_meld, {}
   end
 
   before '/script/*' do
@@ -85,7 +85,7 @@ class HiveCapture < Sinatra::Base
     end
   end
 
-  get '/mmpoll/' do
+  get '/mm_poll/' do
     content_type :js
     tmp_mind_meld = MindMeld.new(
       url: Chamber.env.mind_meld? ? Chamber.env.mind_meld : nil ,
@@ -152,12 +152,11 @@ class HiveCapture < Sinatra::Base
     end
   end
 
-  get '/mmpoll/:id' do
+  get '/mm_poll/:id' do
     content_type :js
 
-    if settings.mind_meld[params[:id].to_i]
-      response = settings.mind_meld[params[:id].to_i].poll
-      puts response
+    if settings.mind_meld[params['id'].to_i]
+      response = settings.mind_meld[params['id'].to_i].poll
       response = {
         action: { 'action_type' => 'message', 'body' => 'Doing nothing again' }
       }
