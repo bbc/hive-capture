@@ -104,19 +104,11 @@ class HiveCapture < Sinatra::Base
       response = {
         id: tmp_mind_meld.id,
         name: tmp_mind_meld.name,
-        device_queues: [],
-        status: 'looks good',
-        hive: 'which hive?',
-        action: { 'action_type' => 'message', 'body' => 'Doing nothing' }
       }
     else
       response = {
         id: '?',
         name: 'Unknown',
-        device_queues: [],
-        status: 'looks bad',
-        hive: '???',
-        action: { 'action_type' => 'message', 'body' => 'Not registering' }
       }
     end
 
