@@ -128,7 +128,7 @@ class HiveCapture < Sinatra::Base
     delay = Time.new - t
     HiveCapture::DataStore.poll_delay(params[:id].to_i, delay)
     data_dump = SimpleStatsStore::FileDump.new(Chamber.env.stats_directory, max: 500)
-    data_dump.write(:delay, { timestamp: Time.now.to_s, device_id: params[:id].to_i, delay: delay} )
+    data_dump.write(:delay, { timestamp: Time.now.strftime("%Y-%m-%d %H:%M:%S.%L"), device_id: params[:id].to_i, delay: delay} )
 
     if ! response['action']
       response['action'] = {
