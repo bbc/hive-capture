@@ -87,9 +87,13 @@ class HiveCapture < Sinatra::Base
 
   get '/mm_poll/' do
     content_type :js
-    tmp_mind_meld = MindMeld.new(
-      url: Chamber.env.mind_meld? ? Chamber.env.mind_meld : nil ,
-      device: {
+
+    response = { action: { action_type: 'message', body: 'No response' } }
+    if params.has_key?('id') and settings.mind_meld[params['id'].to_i]
+      mm = settings.mind_meld[params['id'].to_i]
+      response = mm.poll.merge({id: mm.id, name: mm.name})
+    else
+      device_options = {
         macs: [ mac ],
         ips: [ ip_address ],
         brand: brand,
@@ -97,19 +101,24 @@ class HiveCapture < Sinatra::Base
         range: model,
         device_type: 'Tv'
       }
-    )
+      device_options[:id] = params['id'].to_i if params.has_key?('id')
+      tmp_mind_meld = MindMeld.new(
+        url: Chamber.env.mind_meld? ? Chamber.env.mind_meld : nil,
+        device: device_options
+      )
 
-    if tmp_mind_meld.id
-      settings.mind_meld[tmp_mind_meld.id] = tmp_mind_meld
-      response = {
-        id: tmp_mind_meld.id,
-        name: tmp_mind_meld.name,
-      }
-    else
-      response = {
-        id: '?',
-        name: 'Unknown',
-      }
+      if tmp_mind_meld.id
+        settings.mind_meld[tmp_mind_meld.id] = tmp_mind_meld
+        response = {
+          id: tmp_mind_meld.id,
+          name: tmp_mind_meld.name,
+        }
+      else
+        response = {
+          id: '?',
+          name: 'Unknown',
+        }
+      end
     end
 
     if params.has_key?('callback')
@@ -134,27 +143,6 @@ class HiveCapture < Sinatra::Base
       response['action'] = {
         'action_type' => 'message',
         'body' => "Last poll: %0.2f seconds" % delay
-      }
-    end
-
-    if params.has_key?('callback')
-      "#{params['callback']}(#{response.to_json});"
-    else
-      response.to_json
-    end
-  end
-
-  get '/mm_poll/:id' do
-    content_type :js
-
-    if settings.mind_meld[params['id'].to_i]
-      response = settings.mind_meld[params['id'].to_i].poll
-      response = {
-        action: { 'action_type' => 'message', 'body' => 'Doing nothing again' }
-      }
-    else
-      response = {
-        action: { 'action_type' => 'message', 'body' => 'Doing nothing failing' }
       }
     end
 
