@@ -21,6 +21,12 @@
   <!-- Load require.js -->
   <script type='text/javascript' src='<%= url('antie/static/script/lib/require.js') %>'></script>
 
+  <!-- Communicating with Hive Mind -->
+  <script type='text/javascript' src='<%= url('script/hive_mind_com.js') %>'></script>
+  <script>
+    var mind_meld_url = "<%= session['url'] %>";
+  </script>
+
   <!-- Load application base style sheet -->
   <link rel='stylesheet' href='<%= url('style/base.css') %>'/>
 
