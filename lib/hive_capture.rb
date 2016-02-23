@@ -104,6 +104,9 @@ class HiveCapture < Sinatra::Base
       device_options[:id] = params['id'].to_i if params.has_key?('id')
       tmp_mind_meld = MindMeld.new(
         url: Chamber.env.mind_meld? ? Chamber.env.mind_meld : nil,
+        pem: Chamber.env.cert? ? Chamber.env.cert : nil,
+        ca_file: Chamber.env.cafile? ? Chamber.env.cafile : nil,
+        verify_mode: Chamber.env.verify_mode? ? Chamber.env.verify_mode : nil,
         device: device_options
       )
 
