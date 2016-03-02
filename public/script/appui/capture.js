@@ -59,7 +59,7 @@ require.def("hive_capture/appui/capture",
         });
 
         // Start Hive Mind polling
-        hive_mind_com.init(Application.getCurrentApplication(), 'TitanTV', mind_meld_url);
+        hive_mind_com.init(Application.getCurrentApplication(), appName, mind_meld_url);
         hive_mind_com.setView('id', label_id);
         hive_mind_com.setView('name', label_name);
         hive_mind_com.start();

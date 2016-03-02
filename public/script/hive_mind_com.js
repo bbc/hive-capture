@@ -4,6 +4,7 @@ var hive_mind_com;
   HiveMindCom.prototype = {
     init: function(app, app_name, url) {
       this.app = app;
+      this.app_name = app_name;
       this.device = app.getDevice();
       this.url = url;
       this.poll_url = this.url + '/mm_poll/';
@@ -16,9 +17,9 @@ var hive_mind_com;
     poll: function() {
       var self = this;
       if ( this.id ) {
-        url = this.poll_url + "?id=" + this.id + "&callback=%callback%";
+        url = this.poll_url + "?id=" + this.id + "&application=" + this.app_name + "&callback=%callback%";
       } else {
-        url = this.poll_url + "?callback=%callback%";
+        url = this.poll_url + "?application=" + this.app_name + "&callback=%callback%";
       }
       this.device.getLogger().debug("Polling with timeout " + this.poll_timeout);
       this.device.loadScript(url, /%callback%/, {
