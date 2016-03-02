@@ -10,7 +10,7 @@ require 'bundler/setup'
 require 'sinatra'
 require 'chamber'
 require 'devicedb_comms'
-require 'mind_meld'
+require 'mind_meld/tv'
 require 'simple_stats_store/file_dump'
 require 'fileutils'
 
@@ -91,6 +91,7 @@ class HiveCapture < Sinatra::Base
     response = { action: { action_type: 'message', body: 'No response' } }
     if params.has_key?('id') and settings.mind_meld[params['id'].to_i]
       mm = settings.mind_meld[params['id'].to_i]
+      mm.set_application(params['application']) if mm.device_details['application'] != params['application']
       response = mm.poll.merge({id: mm.id, name: mm.name})
     else
       device_options = {
@@ -99,10 +100,11 @@ class HiveCapture < Sinatra::Base
         brand: brand,
         model: model,
         range: model,
+        application: params['application'],
         device_type: 'Tv'
       }
       device_options[:id] = params['id'].to_i if params.has_key?('id')
-      tmp_mind_meld = MindMeld.new(
+      tmp_mind_meld = MindMeld::Tv.new(
         url: Chamber.env.mind_meld? ? Chamber.env.mind_meld : nil,
         pem: Chamber.env.cert? ? Chamber.env.cert : nil,
         ca_file: Chamber.env.cafile? ? Chamber.env.cafile : nil,
