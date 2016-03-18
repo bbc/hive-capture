@@ -69,7 +69,7 @@ class HiveCapture < Sinatra::Base
     db = DeviceDBComms::Device.new
 
     # DeviceDB registration
-    response = db.register(mac: mac, device_range: model, device_brand: brand, device_type: device_type)
+    response = db.register(mac: mac, ip_address: ip_address, device_range: model, device_brand: brand, device_type: device_type)
     if response.has_key?('id')
       begin
         FileUtils.ln_s("#{settings.public_folder}/delays.png", "#{settings.public_folder}/#{response['id']}.png")
