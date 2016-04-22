@@ -91,8 +91,20 @@ class HiveCapture < Sinatra::Base
     response = { action: { action_type: 'message', body: 'No response' } }
     if params.has_key?('id') and settings.mind_meld[params['id'].to_i]
       mm = settings.mind_meld[params['id'].to_i]
-      mm.set_application(params['application']) if mm.device_details['application'] != params['application']
-      response = mm.poll.merge({id: mm.id, name: mm.name})
+      if mm.device_details
+        if mm.device_details.has_key?('error')
+          response = { message: mm.device_details['error'] }
+        else
+          mm.set_application(params['application']) if mm.device_details['application'] != params['application']
+          if mm.id && mm.name
+            response = mm.poll.merge({id: mm.id, name: mm.name})
+          else
+            response = { message: "Somethign is wrong. id=#{mm.id}, name=#{mm.name}" }
+          end
+        end
+      else
+        response = { message: 'Device details not set' }
+      end
     else
       device_options = {
         macs: [ mac ],
@@ -103,7 +115,7 @@ class HiveCapture < Sinatra::Base
         application: params['application'],
         device_type: 'Tv'
       }
-      device_options[:id] = params['id'].to_i if params.has_key?('id')
+      device_options[:id] = params['id'].to_i if params.has_key?('id') && params['id'].to_i > 0
       tmp_mind_meld = MindMeld::Tv.new(
         url: Chamber.env.mind_meld? ? Chamber.env.mind_meld : nil,
         pem: Chamber.env.cert? ? Chamber.env.cert : nil,
@@ -141,8 +153,8 @@ class HiveCapture < Sinatra::Base
     response = db.set_application(params[:id].to_i, Chamber.env.app_name)
     delay = Time.new - t
     HiveCapture::DataStore.poll_delay(params[:id].to_i, delay)
-    data_dump = SimpleStatsStore::FileDump.new(Chamber.env.stats_directory, max: 500)
-    data_dump.write(:delay, { timestamp: Time.now.strftime("%Y-%m-%d %H:%M:%S.%L"), device_id: params[:id].to_i, delay: delay} )
+    #data_dump = SimpleStatsStore::FileDump.new(Chamber.env.stats_directory, max: 500)
+    #data_dump.write(:delay, { timestamp: Time.now.strftime("%Y-%m-%d %H:%M:%S.%L"), device_id: params[:id].to_i, delay: delay} )
 
     if ! response['action']
       response['action'] = {
@@ -164,7 +176,7 @@ class HiveCapture < Sinatra::Base
   end
 
   # Broadcast autolaunch
-  get '/rc' do
+  get '/rc/?' do
     content_type :rc
     erb :rc,
         locals: {
@@ -174,7 +186,7 @@ class HiveCapture < Sinatra::Base
         }
   end
 
-  get '/ait/' do
+  get '/ait/?' do
     content_type :ait
     headers['Last-Modified'] = Time.now.strftime("%a, %d %b %Y %H:%M:%S GMT")
     headers['Accept-Ranges'] = 'bytes'

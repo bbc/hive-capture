@@ -2,14 +2,12 @@ var hive_mind_com;
 (function() {
   var HiveMindCom = function() {};
   HiveMindCom.prototype = {
-    init: function(app, app_name, url) {
-      this.app = app;
+    init: function(app_name, url) {
       this.app_name = app_name;
-      this.device = app.getDevice();
       this.url = url;
       this.poll_url = this.url + '/mm_poll/';
       this.id = null;
-      this.poll_timeout = 15000;
+      this.poll_timeout = 5000;
       this.poll_spacing = this.poll_timeout * 2;
       this.viewers = {};
     },
@@ -17,31 +15,36 @@ var hive_mind_com;
     poll: function() {
       var self = this;
       if ( this.id ) {
-        url = this.poll_url + "?id=" + this.id + "&application=" + this.app_name + "&callback=%callback%";
+        url = this.poll_url + "?id=" + this.id + "&application=" + this.app_name + "&callback=respond";
       } else {
-        url = this.poll_url + "?application=" + this.app_name + "&callback=%callback%";
+        url = this.poll_url + "?application=" + this.app_name + "&callback=respond";
       }
-      this.device.getLogger().debug("Polling with timeout " + this.poll_timeout);
-      this.device.loadScript(url, /%callback%/, {
-        onSuccess: function(json) {
-          for (var key in self.viewers) {
-            if ( json[key] ) {
-              self.viewers[key].setText(json[key]);
-            }
-          }
-          if ( json.id ) {
-            self.id = json.id;
-          }
-          if ( json.action ) {
-            if ( json.action.action_type == 'redirect' ) {
-alert("Redirecting to " + json.action.body);
-              self.app.launchAppFromURL( json.action.body, {}, [], true );
-            }
-          }
-        },
-        onError: function(response) {
+      script = document.createElement('script');
+      script.src = url;
+      var head = document.getElementsByTagName('head')[0];
+      head.appendChild(script);
+    },
+
+    respond: function(json) {
+      for (var key in this.viewers) {
+        if ( json[key] ) {
+          this.viewers[key].setText(json[key]);
         }
-      }, this.poll_timeout);
+      }
+      if ( this.id != json.id ) {
+        this.id = json.id;
+      }
+      if (json.action && json.action.action_type) {
+        if (json.action.action_type === 'message') {
+          this.viewers['message'].setText(json.action.body);
+        } else if (json.action.action_type ==='redirect') {
+          if (typeof window.location.replace === 'function') {
+            window.location.replace(json.action.body);
+          } else {
+            window.location.href=json.action.body;
+          }
+        }
+      }
     },
 
     setView: function(key, viewer) {
@@ -64,3 +67,10 @@ alert("Redirecting to " + json.action.body);
 
   hive_mind_com = new HiveMindCom();
 })();
+
+respond = function(json) {
+  hive_mind_com.respond(json);
+}
+
+//hive_mind_com.init('Blob', 'http://titantv.dev.pod.bbc/titantv/');
+//hive_mind_com.start();

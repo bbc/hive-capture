@@ -30,14 +30,14 @@ require.def("hive_capture/appui/capture",
 
         self.page_one = [
           this.addComponentContainer("titleComponentContainer", "hive_capture/appui/components/titleContainer"),
-          this.addComponentContainer("deviceInformationContainer", "hive_capture/appui/components/deviceInformation"),
-          this.addComponentContainer("hiveStatsContainer", "hive_capture/appui/components/hiveStats")
+          //this.addComponentContainer("deviceInformationContainer", "hive_capture/appui/components/deviceInformation"),
+          //this.addComponentContainer("hiveStatsContainer", "hive_capture/appui/components/hiveStats")
         ];
         self.page_two = [
           this.addComponentContainer("mm_name_component_container", "hive_capture/appui/components/mm_name"),
         ]
-        for (var i = 0; i < self.page_two.length; i++) {
-          self.page_two[i].addClass('hidden');
+        for (var i = 0; i < self.page_one.length; i++) {
+          self.page_one[i].addClass('hidden');
         }
 
         self.addEventListener('keydown', function(ev) {
@@ -59,7 +59,7 @@ require.def("hive_capture/appui/capture",
         });
 
         // Start Hive Mind polling
-        hive_mind_com.init(Application.getCurrentApplication(), appName, mind_meld_url);
+        hive_mind_com.init(appName, titantv_url);
         hive_mind_com.setView('id', label_id);
         hive_mind_com.setView('name', label_name);
         hive_mind_com.start();

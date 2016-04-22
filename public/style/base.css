@@ -5,17 +5,13 @@ html {
 }
 
 body {
-  color: white;
+  color: #d4d4d4;
   overflow: hidden;
   height: 100%;
   margin: 0;
   padding: 0;
   font-family: "Helvetica", sans-serif;
   font-weight: lighter;
-}
-
-object {
-  position: absolute;
 }
 
 /* Title of the page */
@@ -93,31 +89,21 @@ object {
 }
 
 #mm_id {
-  position: relative;
-  border: solid 1px;
-  border-radius: 20px;
-  -webkit-border-radius: 20px;
-  -moz-border-radius: 20px;
-  margin: 2px;
+  padding: 20px 30px 20px 30px;
+  font-size: 3em;
+  font-weight: bold;
+  border-color: white;
+  border-width: 10px;
+  top: 100px;
 }
 
 #mm_name {
-  position: relative;
-  border: solid 2px;
-  border-radius: 20px;
-  -webkit-border-radius: 20px;
-  -moz-border-radius: 20px;
-  margin: 3px;
-}
-
-#mm_name_component_container {
-  position: absolute;
-  top: 10%;
-  left: 10%;
-  width: 80%;
-  height: 80%;
-}
-
-#mm_name_container {
-  position: relative;
+  padding: 20px;
+  color: black;
+  font-size: 3em;
+  font-weight: bold;
+  background-color: green;
+  border-color: green;
+  border-width: 10px;
+  top: 100px;
 }
