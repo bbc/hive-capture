@@ -71,6 +71,3 @@ var hive_mind_com;
 respond = function(json) {
   hive_mind_com.respond(json);
 }
-
-//hive_mind_com.init('Blob', 'http://titantv.dev.pod.bbc/titantv/');
-//hive_mind_com.start();

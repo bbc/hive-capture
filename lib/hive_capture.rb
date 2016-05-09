@@ -64,26 +64,26 @@ class HiveCapture < Sinatra::Base
     erb :index
   end
 
-  get '/poll/' do
-    content_type :js
-    db = DeviceDBComms::Device.new
-
-    # DeviceDB registration
-    response = db.register(mac: mac, ip_address: ip_address, device_range: model, device_brand: brand, device_type: device_type)
-    if response.has_key?('id')
-      begin
-        FileUtils.ln_s("#{settings.public_folder}/delays.png", "#{settings.public_folder}/#{response['id']}.png")
-      rescue Errno::EEXIST
-        puts "Image for #{response['id']} already exists"
-      end
-    end
-
-    if params.has_key?('callback')
-      "#{params['callback']}(#{response.to_json});"
-    else
-      response.to_json
-    end
-  end
+#  get '/poll/' do
+#    content_type :js
+#    db = DeviceDBComms::Device.new
+#
+#    # DeviceDB registration
+#    response = db.register(mac: mac, ip_address: ip_address, device_range: model, device_brand: brand, device_type: device_type)
+#    if response.has_key?('id')
+#      begin
+#        FileUtils.ln_s("#{settings.public_folder}/delays.png", "#{settings.public_folder}/#{response['id']}.png")
+#      rescue Errno::EEXIST
+#        puts "Image for #{response['id']} already exists"
+#      end
+#    end
+#
+#    if params.has_key?('callback')
+#      "#{params['callback']}(#{response.to_json});"
+#    else
+#      response.to_json
+#    end
+#  end
 
   get '/mm_poll/' do
     content_type :js
@@ -145,30 +145,30 @@ class HiveCapture < Sinatra::Base
     end
   end
 
-  get '/poll/:id' do
-    content_type :js
-    db = DeviceDBComms::Device.new
-
-    t = Time.new
-    response = db.set_application(params[:id].to_i, Chamber.env.app_name)
-    delay = Time.new - t
-    HiveCapture::DataStore.poll_delay(params[:id].to_i, delay)
-    #data_dump = SimpleStatsStore::FileDump.new(Chamber.env.stats_directory, max: 500)
-    #data_dump.write(:delay, { timestamp: Time.now.strftime("%Y-%m-%d %H:%M:%S.%L"), device_id: params[:id].to_i, delay: delay} )
-
-    if ! response['action']
-      response['action'] = {
-        'action_type' => 'message',
-        'body' => "Last poll: %0.2f seconds" % delay
-      }
-    end
-
-    if params.has_key?('callback')
-      "#{params['callback']}(#{response.to_json});"
-    else
-      response.to_json
-    end
-  end
+#  get '/poll/:id' do
+#    content_type :js
+#    db = DeviceDBComms::Device.new
+#
+#    t = Time.new
+#    response = db.set_application(params[:id].to_i, Chamber.env.app_name)
+#    delay = Time.new - t
+#    HiveCapture::DataStore.poll_delay(params[:id].to_i, delay)
+#    #data_dump = SimpleStatsStore::FileDump.new(Chamber.env.stats_directory, max: 500)
+#    #data_dump.write(:delay, { timestamp: Time.now.strftime("%Y-%m-%d %H:%M:%S.%L"), device_id: params[:id].to_i, delay: delay} )
+#
+#    if ! response['action']
+#      response['action'] = {
+#        'action_type' => 'message',
+#        'body' => "Last poll: %0.2f seconds" % delay
+#      }
+#    end
+#
+#    if params.has_key?('callback')
+#      "#{params['callback']}(#{response.to_json});"
+#    else
+#      response.to_json
+#    end
+#  end
 
   # Layouts
   get '/style/layouts/:size.css' do
