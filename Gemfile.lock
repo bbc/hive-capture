@@ -28,6 +28,7 @@ GEM
       thor (~> 0.19.1)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
+    concurrent-ruby (1.1.10)
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     daemons (1.2.3)
@@ -44,10 +45,11 @@ GEM
       rmagick (>= 2.13.4)
     hashdiff (0.2.3)
     hashie (3.4.3)
-    i18n (0.7.0)
+    i18n (0.9.5)
+      concurrent-ruby (~> 1.0)
     ice_nine (0.11.1)
     json (1.8.3)
-    mind_meld (0.0.5)
+    mind_meld (0.1.12)
       activesupport (~> 4)
     minitest (5.8.3)
     rack (1.6.4)
@@ -109,7 +111,7 @@ DEPENDENCIES
   chamber
   devicedb_comms
   gruff
-  mind_meld (>= 0.0.5)
+  mind_meld (~> 0.1)
   rack-test
   rspec
   simple_stats_store (>= 1.0.5)
